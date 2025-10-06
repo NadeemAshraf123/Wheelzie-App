@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "totalEarnings": 8450,
+    "totalBookings": 386,
+    "availableCars": 89,
+    "totalCars": 214
+  },
+  "earnings": [
+    { "month": "January", "amount": 7200 },
+    { "month": "February", "amount": 8500 },
+    { "month": "March", "amount": 9400 },
+    { "month": "April", "amount": 18450 },
+    { "month": "May", "amount": 10200 },
+    { "month": "June", "amount": 9700 },
+    { "month": "July", "amount": 8800 },
+    { "month": "August", "amount": 9300 }
+  ],
+  "bookingsOverview": [
+    { "month": "January", "count": 320 },
+    { "month": "February", "count": 410 },
+    { "month": "March", "count": 520 },
+    { "month": "April", "count": 985 },
+    { "month": "May", "count": 610 },
+    { "month": "June", "count": 590 },
+    { "month": "July", "count": 470 },
+    { "month": "August", "count": 530 }
+  ],
+  "rentStatus": {
+    "hired": 65,
+    "pending": 25,
+    "cancelled": 10
+  },
+  "reminders": [
+    "Notify and service the fleet",
+    "Update car documents before expiry",
+    "Review customer feedback improvements and suggestions"
+  ],
+  "bookings": [
+    {
+      "id": "BK-W1004",
+      "bookingDate": "2023-08-08",
+      "customerName": "Mike Johnston",
+      "carModel": "Toyota Corolla",
+      "duration": 7,
+      "startDate": "2023-08-08",
+      "endDate": "2023-08-15",
+      "status": "Ongoing"
+    },
+    {
+      "id": "BK-W1003",
+      "bookingDate": "2023-08-08",
+      "customerName": "Emma Davis",
+      "carModel": "Honda Civic",
+      "duration": 7,
+      "startDate": "2023-08-08",
+      "endDate": "2023-08-15",
+      "status": "Ongoing"
+    },
+    {
+      "id": "BK-W1002",
+      "bookingDate": "2023-08-08",
+      "customerName": "Charlie Davis",
+      "carModel": "Nissan Altima",
+      "duration": 7,
+      "startDate": "2023-08-08",
+      "endDate": "2023-08-15",
+      "status": "Ongoing"
+    },
+    {
+      "id": "BK-W1001",
+      "bookingDate": "2023-08-08",
+      "customerName": "Olivia White",
+      "carModel": "Honda Accord",
+      "duration": 7,
+      "startDate": "2023-08-08",
+      "endDate": "2023-08-15",
+      "status": "Ongoing"
+    },
+    {
+      "id": "BK-W1000",
+      "bookingDate": "2023-08-08",
+      "customerName": "Ethan Green",
+      "carModel": "Nissan Altima",
+      "duration": 7,
+      "startDate": "2023-08-08",
+      "endDate": "2023-08-15",
+      "status": "Ongoing"
+    }
+  ]
+}
