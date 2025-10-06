@@ -6,24 +6,24 @@
     "totalCars": 214
   },
   "earnings": [
-    { "month": "January", "amount": 7200 },
-    { "month": "February", "amount": 8500 },
-    { "month": "March", "amount": 9400 },
-    { "month": "April", "amount": 18450 },
-    { "month": "May", "amount": 10200 },
-    { "month": "June", "amount": 9700 },
-    { "month": "July", "amount": 8800 },
-    { "month": "August", "amount": 9300 }
+    { "id": 1, "month": "January", "amount": 7200 },
+    { "id": 2, "month": "February", "amount": 8500 },
+    { "id": 3, "month": "March", "amount": 9400 },
+    { "id": 4, "month": "April", "amount": 18450 },
+    { "id": 5, "month": "May", "amount": 10200 },
+    { "id": 6, "month": "June", "amount": 9700 },
+    { "id": 7, "month": "July", "amount": 8800 },
+    { "id": 8, "month": "August", "amount": 9300 }
   ],
   "bookingsOverview": [
-    { "month": "January", "count": 320 },
-    { "month": "February", "count": 410 },
-    { "month": "March", "count": 520 },
-    { "month": "April", "count": 985 },
-    { "month": "May", "count": 610 },
-    { "month": "June", "count": 590 },
-    { "month": "July", "count": 470 },
-    { "month": "August", "count": 530 }
+    { "id": 1, "month": "January", "count": 320 },
+    { "id": 2, "month": "February", "count": 410 },
+    { "id": 3, "month": "March", "count": 520 },
+    { "id": 4, "month": "April", "count": 985 },
+    { "id": 5, "month": "May", "count": 610 },
+    { "id": 6, "month": "June", "count": 590 },
+    { "id": 7, "month": "July", "count": 470 },
+    { "id": 8, "month": "August", "count": 530 }
   ],
   "rentStatus": {
     "hired": 65,
@@ -31,9 +31,24 @@
     "cancelled": 10
   },
   "reminders": [
-    "Notify and service the fleet",
-    "Update car documents before expiry",
-    "Review customer feedback improvements and suggestions"
+    { 
+      "id": 1, 
+      "message": "Notify and service the fleet",
+      "priority": "high",
+      "date": "2024-01-15"
+    },
+    { 
+      "id": 2, 
+      "message": "Update car documents before expiry",
+      "priority": "medium",
+      "date": "2024-01-20"
+    },
+    { 
+      "id": 3, 
+      "message": "Review customer feedback improvements and suggestions",
+      "priority": "low", 
+      "date": "2024-01-25"
+    }
   ],
   "bookings": [
     {

@@ -1,3 +1,4 @@
+import './utils/ChartConfig.ts';
 import { StrictMode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
