@@ -109,7 +109,7 @@ const MetricsSection: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-row-2 space-y-4">
+    <div className="grid grid-cols-2 gap-4">
       {metricCards.map((metric, index) => (
         <div 
           key={index} 

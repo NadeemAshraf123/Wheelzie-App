@@ -5,6 +5,8 @@
     "availableCars": 89,
     "totalCars": 214
   },
+
+
   "earnings": [
     { "id": 1, "month": "January", "amount": 7200 },
     { "id": 2, "month": "February", "amount": 8500 },
@@ -15,6 +17,8 @@
     { "id": 7, "month": "July", "amount": 8800 },
     { "id": 8, "month": "August", "amount": 9300 }
   ],
+
+
   "bookingsOverview": [
     { "id": 1, "month": "January", "count": 320 },
     { "id": 2, "month": "February", "count": 410 },
@@ -30,6 +34,7 @@
     "pending": 25,
     "cancelled": 10
   },
+
   "reminders": [
     { 
       "id": 1, 
@@ -50,6 +55,7 @@
       "date": "2024-01-25"
     }
   ],
+
   "bookings": [
     {
       "id": "BK-W1004",
@@ -101,5 +107,443 @@
       "endDate": "2023-08-15",
       "status": "Ongoing"
     }
-  ]
+  ],
+
+  
+  "clients": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "phone": "123-456-7890",
+      "address": "123 Maple Street",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "points": 120,
+      "documents": [
+        {
+          "id": 1,
+          "name": "Alice's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 2,
+          "name": "Alice's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob.smith@example.com",
+      "phone": "234-567-8901",
+      "address": "456 Oak Avenue",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "points": 150,
+      "documents": [
+        {
+          "id": 3,
+          "name": "Bob's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 4,
+          "name": "Bob's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Charlie Davis",
+      "email": "charlie.davis@example.com",
+      "phone": "345-678-9012",
+      "address": "789 Pine Road",
+      "avatar": "https://i.pravatar.cc/150?img=3",
+      "points": 200,
+      "documents": [
+        {
+          "id": 5,
+          "name": "Charlie's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 6,
+          "name": "Charlie's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Diana White",
+      "email": "diana.white@example.com",
+      "phone": "456-789-0123",
+      "address": "101 Birch Lane",
+      "avatar": "https://i.pravatar.cc/150?img=4",
+      "points": 180,
+      "documents": [
+        {
+          "id": 7,
+          "name": "Diana's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 8,
+          "name": "Diana's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Edward Green",
+      "email": "edward.green@example.com",
+      "phone": "567-890-1234",
+      "address": "202 Cedar Street",
+      "avatar": "https://i.pravatar.cc/150?img=5",
+      "points": 140,
+      "documents": [
+        {
+          "id": 9,
+          "name": "Edward's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 10,
+          "name": "Edward's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Fiona Brown",
+      "email": "fiona.brown@example.com",
+      "phone": "678-901-2345",
+      "address": "303 Elm Avenue",
+      "avatar": "https://i.pravatar.cc/150?img=6",
+      "points": 160,
+      "documents": [
+        {
+          "id": 11,
+          "name": "Fiona's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 12,
+          "name": "Fiona's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "George Clark",
+      "email": "george.clark@example.com",
+      "phone": "789-012-3456",
+      "address": "404 Spruce Road",
+      "avatar": "https://i.pravatar.cc/150?img=7",
+      "points": 110,
+      "documents": [
+        {
+          "id": 13,
+          "name": "George's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 14,
+          "name": "George's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Helen Martinez",
+      "email": "helen.martinez@example.com",
+      "phone": "890-123-4567",
+      "address": "505 Willow Lane",
+      "avatar": "https://i.pravatar.cc/150?img=8",
+      "points": 170,
+      "documents": [
+        {
+          "id": 15,
+          "name": "Helen's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 16,
+          "name": "Helen's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Ivan Rodriguez",
+      "email": "ivan.rodriguez@example.com",
+      "phone": "901-234-5678",
+      "address": "606 Walnut Street",
+      "avatar": "https://i.pravatar.cc/150?img=9",
+      "points": 130,
+      "documents": [
+        {
+          "id": 17,
+          "name": "Ivan's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 18,
+          "name": "Ivan's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Jane Wilson",
+      "email": "jane.wilson@example.com",
+      "phone": "012-345-6789",
+      "address": "707 Ash Avenue",
+      "avatar": "https://i.pravatar.cc/150?img=10",
+      "points": 190,
+      "documents": [
+        {
+          "id": 19,
+          "name": "Jane's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 20,
+          "name": "Jane's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Kyle Thompson",
+      "email": "kyle.thompson@example.com",
+      "phone": "123-456-7891",
+      "address": "808 Cherry Road",
+      "avatar": "https://i.pravatar.cc/150?img=11",
+      "points": 175,
+      "documents": [
+        {
+          "id": 21,
+          "name": "Kyle's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 22,
+          "name": "Kyle's License",
+          "type": "license"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Laura King",
+      "email": "laura.king@example.com",
+      "phone": "234-567-8902",
+      "address": "909 Chestnut Lane",
+      "avatar": "https://i.pravatar.cc/150?img=12",
+      "points": 155,
+      "documents": [
+        {
+          "id": 23,
+          "name": "Laura's Residence Card",
+          "type": "residence"
+        },
+        {
+          "id": 24,
+          "name": "Laura's License",
+          "type": "license"
+        }
+      ]
+    }
+  ],
+
+  
+  
+"drivers": [
+  {
+    "id": 1,
+    "name": "John Adams",
+    "email": "john.adams@example.com",
+    "phone": "123-456-7890",
+    "status": "On Duty",
+    "avatar": "https://i.pravatar.cc/150?img=13",
+    "address": "123 Maple Street, Chicago, IL 60601",
+    "workingHours": "08:00 - 17:00"
+  },
+  {
+    "id": 2,
+    "name": "Emily Brown",
+    "email": "emily.brown@example.com",
+    "phone": "234-567-8901",
+    "status": "Off Duty",
+    "avatar": "https://i.pravatar.cc/150?img=14",
+    "address": "45 Pine Avenue, Dallas, TX 75201",
+    "workingHours": "09:00 - 18:00"
+  },
+  {
+    "id": 3,
+    "name": "Michael Clark",
+    "email": "michael.clark@example.com",
+    "phone": "345-678-9012",
+    "status": "Sick Leave",
+    "avatar": "https://i.pravatar.cc/150?img=15",
+    "address": "678 Oak Road, Seattle, WA 98101",
+    "workingHours": "07:30 - 16:30"
+  },
+  {
+    "id": 4,
+    "name": "Sarah Davis",
+    "email": "sarah.davis@example.com",
+    "phone": "456-789-0123",
+    "status": "On Duty",
+    "avatar": "https://i.pravatar.cc/150?img=16",
+    "address": "89 Birch Lane, Miami, FL 33101",
+    "workingHours": "08:30 - 17:30"
+  },
+  {
+    "id": 5,
+    "name": "Emma Evans",
+    "email": "emma.evans@example.com",
+    "phone": "567-890-1234",
+    "status": "Off Duty",
+    "avatar": "https://i.pravatar.cc/150?img=17",
+    "address": "210 Cedar Street, Denver, CO 80202",
+    "workingHours": "10:00 - 19:00"
+  },
+  {
+    "id": 6,
+    "name": "Laura Fisher",
+    "email": "laura.fisher@example.com",
+    "phone": "678-901-2345",
+    "status": "On Duty",
+    "avatar": "https://i.pravatar.cc/150?img=18",
+    "address": "312 Aspen Drive, Phoenix, AZ 85001",
+    "workingHours": "07:00 - 16:00"
+  },
+  {
+    "id": 7,
+    "name": "Robert Gray",
+    "email": "robert.gray@example.com",
+    "phone": "789-012-3456",
+    "status": "Sick Leave",
+    "avatar": "https://i.pravatar.cc/150?img=19",
+    "address": "145 Willow Boulevard, Portland, OR 97201",
+    "workingHours": "08:00 - 17:00"
+  },
+  {
+    "id": 8,
+    "name": "Jessica Harris",
+    "email": "jessica.harris@example.com",
+    "phone": "890-123-4567",
+    "status": "On Duty",
+    "avatar": "https://i.pravatar.cc/150?img=20",
+    "address": "520 Elm Street, Atlanta, GA 30301",
+    "workingHours": "09:00 - 18:00"
+  },
+  {
+    "id": 9,
+    "name": "Daniel Jackson",
+    "email": "daniel.jackson@example.com",
+    "phone": "999-000-1111",
+    "status": "On Duty",
+    "avatar": "https://i.pravatar.cc/150?img=21",
+    "address": "740 Spruce Avenue, San Francisco, CA 94102",
+    "workingHours": "08:00 - 17:00",
+    "schedule": [
+      { "date": "2028-08-05", "assignment": "Alice Johnson" },
+      { "date": "2028-08-06", "assignment": "Bob Smith" },
+      { "date": "2028-08-07", "assignment": "Sarah Davis" },
+      { "date": "2028-08-08", "assignment": "Diana White", "vehicle": "Chevrolet Malibu" }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "David Lee",
+    "email": "david.lee@example.com",
+    "phone": "012-345-6789",
+    "status": "Off Duty",
+    "avatar": "https://i.pravatar.cc/150?img=22",
+    "address": "980 Redwood Street, Boston, MA 02108",
+    "workingHours": "09:00 - 18:00"
+  }
+],
+
+
+  
+  "calendar": {
+    "month": "August",
+    "year": "2028",
+    "schedules": [
+      {
+        "date": "14",
+        "day": "Mon",
+        "events": [
+          { "id": "1", "time": "8:00 AM", "vehicle": "Ford Focus", "customer": "Michael Brown", "type": "pickup" },
+          { "id": "2", "time": "9:00 AM", "vehicle": "Toyota Corolla", "customer": "Alice Johnson", "type": "pickup" }
+        ]
+      },
+      {
+        "date": "15",
+        "day": "Tue",
+        "events": [
+          { "id": "3", "time": "8:00 AM", "vehicle": "Kia Soul", "customer": "Oliver Scott", "type": "pickup" },
+          { "id": "4", "time": "9:00 AM", "vehicle": "Toyota Corolla", "customer": "Alice Johnson", "type": "pickup" },
+          { "id": "5", "time": "9:00 AM", "vehicle": "Nissan Altima", "customer": "Oliver Scott", "type": "return" }
+        ]
+      },
+      {
+        "date": "16",
+        "day": "Wed",
+        "events": [
+          { "id": "6", "time": "8:00 AM", "vehicle": "Chevrolet Malibu", "customer": "Helen Martinez", "type": "pickup" },
+          { "id": "7", "time": "1:00 PM", "vehicle": "Hyundai Elantra", "customer": "Jane Wilson", "type": "pickup" },
+          { "id": "8", "time": "1:20 PM", "vehicle": "Mercedes C-Class", "customer": "Fiona Brown", "type": "pickup" },
+          { "id": "9", "time": "1:20 PM", "vehicle": "Hyundai Elantra", "customer": "George Clark", "type": "return" }
+        ]
+      },
+      {
+        "date": "17",
+        "day": "Thu",
+        "events": [
+          { "id": "10", "time": "1:20 PM", "vehicle": "Ford Focus", "customer": "Kyle Thompson", "type": "pickup" },
+          { "id": "11", "time": "1:20 PM", "vehicle": "Honda Civic", "customer": "Bob Smith", "type": "return" },
+          { "id": "12", "time": "11:00 AM", "vehicle": "BMW X5", "customer": "Charlie Davis", "type": "pickup" }
+        ]
+      },
+      {
+        "date": "18",
+        "day": "Fri",
+        "events": [
+          { "id": "13", "time": "8:00 AM", "vehicle": "Chariot MaliBlu", "customer": "Nancy Davis", "type": "pickup" },
+          { "id": "14", "time": "8:00 AM", "vehicle": "BMW X5", "customer": "Charlie Davis", "type": "return" }
+        ]
+      },
+      {
+        "date": "19",
+        "day": "Sat",
+        "events": [
+          { "id": "15", "time": "8:00 PM", "vehicle": "Ford Focus", "customer": "Mike Thompson", "type": "pickup" },
+          { "id": "16", "time": "3:00 PM", "vehicle": "Ford Focus", "customer": "Kyle Thompson", "type": "return" },
+          { "id": "17", "time": "4:00 PM", "vehicle": "Ford Focus", "customer": "Kyle Thompson", "type": "pickup" },
+          { "id": "18", "time": "5:00 PM", "vehicle": "Ford Focus", "customer": "Kyle Thompson", "type": "return" },
+          { "id": "19", "time": "2:00 PM", "vehicle": "Honda Civic", "customer": "Bob Smith", "type": "pickup" },
+          { "id": "20", "time": "1:50 AM", "vehicle": "Toyota Corolla", "customer": "Michael Brown", "type": "return" },
+          { "id": "21", "time": "2:50 PM", "vehicle": "Audi Q7", "customer": "Kyle Thompson", "type": "pickup" },
+          { "id": "22", "time": "3:00 PM", "vehicle": "Kia Soul", "customer": "Diana White", "type": "return" }
+        ]
+      }
+    ]
+
+
+
+
+}
 }

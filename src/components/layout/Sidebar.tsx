@@ -55,7 +55,7 @@ const Sidebar = () => {
               </Link>
             </li>
 
-            {/* Dropdown */}
+          
             <li>
               <button
                 onClick={() => setOpenDropdown(!openDropdown)}
