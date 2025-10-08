@@ -9,8 +9,9 @@ import ClientManagementPage from './client/pages/ClientManagementPage';
 import AddClientPage from './client/pages/AddClientPage';
 import { Calendar } from './client/pages/Clendar';
 import Drivers from './client/pages/Drivers';
-import UNitDetailed from './client/pages/CarDetail';
+import UnitDetailed from './client/pages/CarDetail';
 import CarDetail from './client/pages/CarDetail';
+import CarListPage from './client/pages/CarListPage';
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
             <Route path="/addclient" element={ <AddClientPage />  } />
             <Route path='/calendar' element={ <Calendar />  } /> 
             <Route path='/drivers' element={ <Drivers />  } /> 
-            <Route path='/units' element={ <CarDetail /> } /> 
+            <Route path='/units' element={ <CarListPage /> } /> 
 
 
 
