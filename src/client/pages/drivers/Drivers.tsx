@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import AddDriverForm from './AddDriverForm';
 
 type Driver = {
   id: number;
@@ -26,8 +27,9 @@ const Drivers: React.FC = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false); // 👈 Add this
 
-  const { data: drivers = [], isLoading } = useQuery({
+  const { data: drivers = [], isLoading, refetch } = useQuery({
     queryKey: ['drivers'],
     queryFn: fetchDrivers,
   });
@@ -37,9 +39,30 @@ const Drivers: React.FC = () => {
     (statusFilter ? driver.status === statusFilter : true)
   );
 
+  const handleAddDriver = async (data: any) => {
+    // 🔹 Example: Save new driver to backend
+    await fetch('http://localhost:3000/drivers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: Date.now(),
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        status: data.status,
+        avatar: 'https://via.placeholder.com/100',
+        address: 'N/A',
+      }),
+    });
+
+    await refetch(); // ✅ Refresh driver list
+    setShowAddForm(false); // Close form
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden relative">
       
+      {/* Left: Driver Table */}
       <div className="w-2/3 p-6 overflow-y-auto border-r border-gray-300">
         <div className="flex items-center gap-4 mb-6">
           <input
@@ -59,12 +82,17 @@ const Drivers: React.FC = () => {
             <option value="Off Duty">Off Duty</option>
             <option value="Sick Leave">Sick Leave</option>
           </select>
-          <button className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+
+          {/* Add Driver Button */}
+          <button
+            onClick={() => setShowAddForm(true)} // 👈 open form
+            className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
             Add Driver
           </button>
         </div>
 
-        
+        {/* Driver Table */}
         <table className="w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-100 text-left">
@@ -106,7 +134,7 @@ const Drivers: React.FC = () => {
         </table>
       </div>
 
-
+      {/* Right: Driver Detail */}
       {selectedDriver && (
         <div className="w-1/3 p-6 bg-gray-50 overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
@@ -126,34 +154,25 @@ const Drivers: React.FC = () => {
           <div className="mb-4 space-y-6">
             <p><strong>Email:</strong> {selectedDriver.email}</p>
             <p><strong>Phone:</strong> {selectedDriver.phone}</p>
-            <p><strong>Address:</strong> {selectedDriver.address} </p>
+            <p><strong>Address:</strong> {selectedDriver.address}</p>
           </div>
+        </div>
+      )}
 
-          <div className="mt-16">
-            <h3 className="font-semibold mb-2">Calendar (August 2028)</h3>
-            <div className="grid grid-cols-7 gap-2 text-center text-sm">
-              {[...Array(31)].map((_, i) => {
-                const day = i + 1;
-                const isScheduled = selectedDriver.schedule?.some(s => s.date.endsWith(`-08-${day.toString().padStart(2, '0')}`));
-                return (
-                  <div key={day} className={`p-2 border rounded ${isScheduled ? 'bg-blue-100 font-bold' : ''}`}>
-                    {day}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mt-4">Upcoming Assignments</h3>
-            <ul className="list-disc pl-5 text-sm">
-              {selectedDriver.schedule?.map((s, idx) => (
-                <li key={idx}>
-                  <strong>{new Date(s.date).toLocaleDateString()}</strong>: {s.assignment}
-                  {s.vehicle && ` (${s.vehicle})`}
-                </li>
-              )) || <p>No assignments</p>}
-            </ul>
+      {/* 🔹 Add Driver Modal */}
+      {showAddForm && (
+        <div className="absolute inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+            >
+              ✖
+            </button>
+            <AddDriverForm
+              onClose={() => setShowAddForm(false)}
+              onSubmit={handleAddDriver}
+            />
           </div>
         </div>
       )}

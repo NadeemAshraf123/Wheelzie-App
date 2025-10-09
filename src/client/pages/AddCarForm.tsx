@@ -36,7 +36,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ isOpen, onClose }) => {
     mutationFn: async (carData: Omit<Car, 'id'>) => {
       console.log('Sending car data:', carData);
       
-      const response = await fetch('https://83743e85f399.ngrok-free.app/cars/', {
+      const response = await fetch('https://3d00fd53f473.ngrok-free.app/cars/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,6 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleClose();

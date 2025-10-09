@@ -12,7 +12,7 @@ interface Car {
 
 const fetchCars = async (): Promise<Car[]> => {
     
-  const response = await fetch("https://83743e85f399.ngrok-free.app/cars/", {
+  const response = await fetch("https://3d00fd53f473.ngrok-free.app/cars/", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

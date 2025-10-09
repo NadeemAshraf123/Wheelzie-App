@@ -8,7 +8,7 @@ import Bookings from './client/pages/Bookings';
 import ClientManagementPage from './client/pages/ClientManagementPage';
 import AddClientPage from './client/pages/AddClientPage';
 import { Calendar } from './client/pages/Clendar';
-import Drivers from './client/pages/Drivers';
+import Drivers from './client/pages/drivers/Drivers';
 import CarsList from './client/pages/CarList';
 import AddCarForm from './client/pages/AddCarForm';
 // import UnitDetailed from './client/pages/CarDetail';
@@ -40,8 +40,7 @@ function App() {
             <Route path='/units' element={ <CarsList />  } /> 
             {/* <Route path='/addunit' element={ <AddCarForm /> } /> */}
 
-            <Route path='/addunit' element={ <AddCarForm isOpen={true} onClose={() => {reset()
-              onclose()}}  /> } /> 
+            <Route path='/addunit' element={ <AddCarForm isOpen={true} onClose={() => { console.log("Form closed")}}  /> } /> 
 
 
 
