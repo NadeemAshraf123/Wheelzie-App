@@ -1,12 +1,25 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setActivePage } from "../../features/uiSlice";
+import type { AppDispatch } from '../../app/store';
 import {
   LayoutDashboard, Calendar, Users, Car, User,
   Wallet, Truck, MessageSquare, ChevronDown, LogOut
 } from "lucide-react";
 
+
+
 const Sidebar = () => {
+  
   const [openDropdown, setOpenDropdown] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleNav = (page: string) => {
+    dispatch(setActivePage(page));
+  };
+
+
 
   return (
     <aside className="w-60 h-screen bg-white shadow-sm flex flex-col justify-between">
@@ -19,37 +32,62 @@ const Sidebar = () => {
         <nav className="mt-4">
           <ul className="space-y-1">
             <li>
-              <Link to="/dashboard" className="flex items-center px-6 py-2 bg-red-50 text-red-600 rounded-md hover:bg-red-100">
+              <Link to="/dashboard"
+              onClick={() => handleNav('Dashboard')}
+               className="flex items-center px-6 py-2 bg-red-50 text-red-600 rounded-md hover:bg-red-100">
                 <LayoutDashboard size={18} className="mr-3" />
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link to="/bookings" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/bookings" 
+              onClick={() => handleNav('bookings')}
+
+              className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <Calendar size={18} className="mr-3" />
                 Bookings
               </Link>
             </li>
+              <li>
+              <Link to="/newbookings" 
+              onClick={() => handleNav('new-Bookings')}
+
+              className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+                <Calendar size={18} className="mr-3" />
+                New Bookings
+              </Link>
+            </li>
+
             <li>
-              <Link to="/units" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/cars"
+
+                  onClick={() => handleNav('cars')}
+                  className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <Car size={18} className="mr-3" />
                 Units
               </Link>
             </li>
             <li>
-              <Link to="/calendar" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/calendar"
+              onClick={() => handleNav('calendar')}
+                    className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <Calendar size={18} className="mr-3" />
                 Calendar
               </Link>
             </li>
             <li>
-              <Link to="/clients" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/clients"
+              onClick={() => handleNav('clients')}
+
+                    className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <Users size={18} className="mr-3" />
                 Clients
               </Link>
             </li>
             <li>
-              <Link to="/drivers" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/drivers"
+                      onClick={() => handleNav('drivers')}
+                     className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <User size={18} className="mr-3" />
                 Drivers
               </Link>
@@ -59,6 +97,7 @@ const Sidebar = () => {
             <li>
               <button
                 onClick={() => setOpenDropdown(!openDropdown)}
+                
                 className="flex items-center px-6 py-2 w-full text-gray-600 hover:bg-gray-100"
               >
                 <Wallet size={18} className="mr-3" />
@@ -81,13 +120,17 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Link to="/tracking" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/tracking" 
+                      onClick={() => handleNav('tracking')}
+                    className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <Truck size={18} className="mr-3" />
                 Tracking
               </Link>
             </li>
             <li>
-              <Link to="/messages" className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
+              <Link to="/messages" 
+                      onClick={() => handleNav('message')}         
+                    className="flex items-center px-6 py-2 text-gray-600 hover:bg-gray-100">
                 <MessageSquare size={18} className="mr-3" />
                 Messages
                 <span className="ml-auto w-2 h-2 rounded-full bg-red-500"></span>

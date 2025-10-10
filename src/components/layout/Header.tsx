@@ -1,12 +1,22 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../app/store';
+
 
 const Header: React.FC = () => {
+
+
+  const activePage = useSelector((state: RootState) => state.ui.activePage);
+  console.log("activePage", activePage);
+  const formattedPage = activePage.charAt(0).toUpperCase() + activePage.slice(1);
+
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="flex items-center justify-between px-6 py-4">
       
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{formattedPage}</h2>
           <p className="text-sm text-gray-500 mt-1">Welcome back, Admin</p>
         </div>
         

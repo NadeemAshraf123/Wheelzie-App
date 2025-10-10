@@ -38,31 +38,27 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
     },
   });
 
-
-
-  // Mutation: POST request using React Query
   const mutation = useMutation({
     mutationFn: async (data: DriverFormData) => {
-      const url = "https://3d00fd53f473.ngrok-free.app/drivers/";
+      const url = "https://1fc9b9ba03e4.ngrok-free.app/drivers/";
 
-   const formData = new FormData();
-formData.append("name", data.name);
-formData.append("email", data.email);
-formData.append("phone", data.phone);
-formData.append("status", data.status);
-formData.append("total_hours", data.total_hours.toString());
-formData.append("total_trips", data.total_trips.toString());
-formData.append("performance_rating", data.performance_rating.toString());
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("status", data.status);
+      formData.append("total_hours", data.total_hours.toString());
+      formData.append("total_trips", data.total_trips.toString());
+      formData.append("performance_rating", data.performance_rating.toString());
 
-if (data.profileImage && data.profileImage.length > 0) {
-  formData.append("profile_image", data.profileImage[0]); // 👈 Actual file
-}
+      if (data.profileImage && data.profileImage.length > 0) {
+        formData.append("profile_image", data.profileImage[0]);
+      }
 
-const res = await fetch(url, {
-  method: "POST",
-  body: formData, // 👈 No need to set headers, fetch handles it
-});
-
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!res.ok) {
         const err = await res.text();
@@ -93,7 +89,6 @@ const res = await fetch(url, {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="">
-        {/* Profile Image */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Profile Image
@@ -116,7 +111,6 @@ const res = await fetch(url, {
           )}
         </div>
 
-        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name <span className="text-red-500">*</span>
@@ -126,16 +120,20 @@ const res = await fetch(url, {
             placeholder="John Adams"
             {...register("name", {
               required: "Name is required",
-              minLength: { value: 3, message: "Name must be at least 3 characters" },
+              minLength: {
+                value: 3,
+                message: "Name must be at least 3 characters",
+              },
             })}
             className={`w-full border rounded-lg p-2 outline-none ${
               errors.name ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-red-500 text-xs">{errors.name.message}</p>
+          )}
         </div>
 
-        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Email <span className="text-red-500">*</span>
@@ -145,16 +143,20 @@ const res = await fetch(url, {
             placeholder="john.adams@example.com"
             {...register("email", {
               required: "Email is required",
-              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Enter a valid email" },
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email",
+              },
             })}
             className={`w-full border rounded-lg p-2 outline-none ${
               errors.email ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-xs">{errors.email.message}</p>
+          )}
         </div>
 
-        {/* Phone */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Phone No. <span className="text-red-500">*</span>
@@ -170,12 +172,15 @@ const res = await fetch(url, {
               errors.phone ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+          {errors.phone && (
+            <p className="text-red-500 text-xs">{errors.phone.message}</p>
+          )}
         </div>
 
-        {/* Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Status</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Status
+          </label>
           <select
             {...register("status", { required: "Status is required" })}
             className={`w-full border rounded-lg p-2 outline-none ${
@@ -188,7 +193,6 @@ const res = await fetch(url, {
           </select>
         </div>
 
-        {/* Total Hours */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Total Hours
@@ -208,7 +212,6 @@ const res = await fetch(url, {
           )}
         </div>
 
-        {/* Total Trips */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Total Trips
@@ -228,7 +231,6 @@ const res = await fetch(url, {
           )}
         </div>
 
-        {/* Performance Rating */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Performance Rating (0–5)
@@ -252,7 +254,6 @@ const res = await fetch(url, {
           )}
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-between items-center mt-4">
           <button
             type="button"
