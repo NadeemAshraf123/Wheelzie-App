@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { Api_BASE_URL } from "../../../utils/config";
 
 type CarFormData = {
   name: string;
@@ -34,7 +35,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
 
   const mutation = useMutation({
     mutationFn: async (data: CarFormData) => {
-      const url = "https://1fc9b9ba03e4.ngrok-free.app/cars/";
+      const url = `${Api_BASE_URL}/cars/`;
 
       const formData = new FormData();
       formData.append("name", data.name);
@@ -49,6 +50,9 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
       const res = await fetch(url, {
         method: "POST",
         body: formData,
+      headers: { "ngrok-skip-browser-warning": "true"
+
+        },
       });
 
       if (!res.ok) {

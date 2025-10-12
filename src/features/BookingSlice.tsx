@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Api_BASE_URL } from '../utils/config';
 
 export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async () => {
-  const response = await axios.get('http://127.0.0.1:8000/bookings/', {
+
+
+  const response = await axios.get(`${Api_BASE_URL}/bookings`, {
     headers: { 'ngrok-skip-browser-warning': 'true' }
   });
   return response.data;
@@ -13,7 +16,7 @@ export const addBooking = createAsyncThunk(
   async (bookingData: any, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/bookings/',
+        `${Api_BASE_URL}/bookings`,
         bookingData,
         { headers: { 'ngrok-skip-browser-warning': 'true' } }
       );

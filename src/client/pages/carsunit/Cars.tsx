@@ -1,6 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAppDispatch } from "../../../app/store"
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchCars,
+  addCar,
+  updateCar,
+  deleteCar,
+  selectCars,
+  selectCarsStatus,
+} from "../../../features/CarsSlice";
 import AddCarForm from "./AddCarForm";
 import EditCarForm from "./EditCarForm";
 
@@ -11,114 +20,73 @@ type Car = {
   license_plate: string;
   daily_rate: number | null;
   image?: string;
-};
-
-const fetchCars = async (): Promise<Car[]> => {
-  const response = await fetch("https://54d665185c0f.ngrok-free.app/cars/", {
-    method: "GET",
-    headers: {
-      "ngrok-skip-browser-warning": "true",
-      Accept: "application/json",
-    },
-  });
-  if (!response.ok) throw new Error("Failed to fetch cars");
-  return response.json();
+  file?: File;
 };
 
 const Cars: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const cars = useSelector(selectCars);
+  const status = useSelector(selectCarsStatus);
+
   const [search, setSearch] = useState("");
-  const [selectedCarForEdit, setSelectedCarForEdit] = useState<Car | null>(
-    null
-  );
+  const [selectedCarForEdit, setSelectedCarForEdit] = useState<Car | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCars());
+    }
+  }, [dispatch, status]);
 
-  const { data: cars = [], isLoading } = useQuery({
-    queryKey: ["cars"],
-    queryFn: fetchCars,
-  });
+  const handleAddCar = (data: Car) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("model_type", data.model_type || "");
+    formData.append("license_plate", data.license_plate);
+    formData.append("daily_rate", data.daily_rate?.toString() || "0");
+    if (data.file) formData.append("image", data.file);
 
-  const deleteCarMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return fetch(`https://54d665185c0f.ngrok-free.app/cars/${id}/`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-    },
-    onSuccess: () => {
-      toast.success("Car deleted successfully");
-      queryClient.invalidateQueries(["cars"]);
-    },
-    onError: () => {
-      toast.error("Failed to delete car");
-    },
-  });
+    dispatch(addCar(formData))
+      .unwrap()
+      .then(() => {
+        toast.success("Car added successfully");
+        setShowAddForm(false);
+      })
+      .catch(() => toast.error("Failed to add car"));
+  };
 
-  const updateCarMutation = useMutation({
-    mutationFn: async (data: Partial<Car> & { file?: File }) => {
-      const formData = new FormData();
-      formData.append("name", data.name || "");
-      formData.append("model_type", data.model_type || "");
-      formData.append("license_plate", data.license_plate || "");
-      formData.append("daily_rate", data.daily_rate?.toString() || "0");
+  const handleUpdateCar = (data: Partial<Car>) => {
+    if (!selectedCarForEdit) return;
 
-      if (data.file) {
-        formData.append("image", data.file);
-      }
+    const formData = new FormData();
+    formData.append("name", data.name || "");
+    formData.append("model_type", data.model_type || "");
+    formData.append("license_plate", data.license_plate || "");
+    formData.append("daily_rate", data.daily_rate?.toString() || "0");
+    if (data.file) formData.append("image", data.file);
 
-      return fetch(`https://54d665185c0f.ngrok-free.app/cars/${data.id}/`, {
-        method: "PUT",
-        body: formData,
-      });
-    },
-    onSuccess: () => {
-      toast.success("Car updated successfully");
-      queryClient.invalidateQueries(["cars"]);
-      setShowEditForm(false);
-    },
-    onError: () => {
-      toast.error("Failed to update car");
-    },
-  });
+    dispatch(updateCar({ id: selectedCarForEdit.id, formData }))
+      .unwrap()
+      .then(() => {
+        toast.success("Car updated successfully");
+        setShowEditForm(false);
+      })
+      .catch(() => toast.error("Failed to update car"));
+  };
+
+  const handleDeleteCar = (id: number, name: string) => {
+    if (confirm(`Are you sure you want to delete ${name}?`)) {
+      dispatch(deleteCar(id))
+        .unwrap()
+        .then(() => toast.success("Car deleted successfully"))
+        .catch(() => toast.error("Failed to delete car"));
+    }
+  };
 
   const filteredCars = cars.filter((car) =>
     car.name.toLowerCase().includes(search.toLowerCase())
   );
-
-  const addCarMutation = useMutation({
-    mutationFn: async (data: Car & { file?: File }) => {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("model_type", data.model_type || "");
-      formData.append("license_plate", data.license_plate);
-      formData.append("daily_rate", data.daily_rate?.toString() || "0");
-      if (data.file) formData.append("image", data.file);
-
-      const response = await fetch(
-        "https://54d665185c0f.ngrok-free.app/cars/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (!response.ok) throw new Error("Failed to add car");
-      return response.json();
-    },
-    onSuccess: () => {
-      toast.success("Car added successfully");
-      queryClient.invalidateQueries(["cars"]);
-      setShowAddForm(false);
-    },
-    onError: () => {
-      toast.error("Failed to add car");
-    },
-  });
-
-  const handleAddCar = (data: any) => {
-    addCarMutation.mutate(data);
-  };
 
   return (
     <div className="p-6 w-full">
@@ -139,7 +107,7 @@ const Cars: React.FC = () => {
         </button>
       </div>
 
-      {isLoading ? (
+      {status === "loading" ? (
         <div className="text-center py-10">Loading...</div>
       ) : filteredCars.length === 0 ? (
         <div className="text-center py-10">No cars found</div>
@@ -160,12 +128,8 @@ const Cars: React.FC = () => {
               />
 
               <div className="w-40 font-semibold">{car.name || "N/A"}</div>
-              <div className="w-32 text-gray-600">
-                {car.model_type || "N/A"}
-              </div>
-              <div className="w-32 text-gray-600">
-                {car.license_plate || "N/A"}
-              </div>
+              <div className="w-32 text-gray-600">{car.model_type || "N/A"}</div>
+              <div className="w-32 text-gray-600">{car.license_plate || "N/A"}</div>
               <div className="w-24 text-gray-600">
                 {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
               </div>
@@ -181,11 +145,7 @@ const Cars: React.FC = () => {
               </button>
 
               <button
-                onClick={() => {
-                  if (confirm(`Are you sure you want to delete ${car.name}?`)) {
-                    deleteCarMutation.mutate(car.id);
-                  }
-                }}
+                onClick={() => handleDeleteCar(car.id, car.name)}
                 className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
               >
                 Delete
@@ -224,9 +184,7 @@ const Cars: React.FC = () => {
             <EditCarForm
               car={selectedCarForEdit}
               onClose={() => setShowEditForm(false)}
-              onSubmit={(data) =>
-                updateCarMutation.mutate({ ...selectedCarForEdit, ...data })
-              }
+              onSubmit={handleUpdateCar}
             />
           </div>
         </div>

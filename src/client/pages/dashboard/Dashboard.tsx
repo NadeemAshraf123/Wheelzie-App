@@ -1,10 +1,10 @@
 import React from 'react';
-import MetricsSection from '../../components/dashboard/MetricsSection';
-import EarningsChart from '../../components/dashboard/EarningsChart';
-import BookingsChart from '../../components/dashboard/BookingsChart';
-import RentStatusPie from '../dashboard/RentStatusPie';
-import BookingsTable from '../../client/pages/bookings/BookingsTable';
-import Reminders from '../../components/dashboard/Reminders';
+import MetricsSection from "../../../components/dashboard/MetricsSection";
+import EarningsChart from '../../../components/dashboard/EarningsChart';
+import BookingsChart from '../../../components/dashboard/BookingsChart';
+import RentStatusPie from '../../../components/dashboard/RentStatusPie';
+import BookingsTable from '../../../client/pages/bookings/BookingsTable';
+import Reminders from '../../../components/dashboard/Reminders';
 
 const Dashboard: React.FC = () => {
   return (

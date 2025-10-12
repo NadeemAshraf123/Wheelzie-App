@@ -1,90 +1,68 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, FileText } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import EditClientModal from './EditClientModal';
-
-interface Client {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  document_name: string;
-  points: number;
-}
-
-const API_URL = 'http://127.0.0.1:8000/clients/';
-
-const fetchClients = async (): Promise<Client[]> => {
-  const response = await fetch(API_URL, {
-    headers: {
-      'ngrok-skip-browser-warning': 'true',
-      Accept: 'application/json',
-    },
-  });
-  if (!response.ok) throw new Error('Failed to fetch clients');
-  return response.json();
-};
-
-const deleteClient = async (id: number): Promise<void> => {
-  const response = await fetch(`${API_URL}${id}/`, {
-    method: 'DELETE',
-    headers: { 'ngrok-skip-browser-warning': 'true' },
-  });
-  if (!response.ok) throw new Error('Failed to delete client');
-};
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Search, FileText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import EditClientModal from "./EditClientModal";
+import {
+  fetchClients,
+  deleteClient,
+  selectClients,
+  selectClientsStatus,
+  selectClientsError,
+  selectClientsDeleting,
+} from "../../../features/ClientsSlice";
 
 const ClientManagementPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedClients, setSelectedClients] = useState<number[]>([]);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingClient, setEditingClient] = useState<Client | null>(null);
-
-  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data: clients = [], isLoading, error } = useQuery<Client[]>({
-    queryKey: ['clients'],
-    queryFn: fetchClients,
-  });
+  const clients = useSelector(selectClients);
+  const status = useSelector(selectClientsStatus);
+  const error = useSelector(selectClientsError);
+  const deleting = useSelector(selectClientsDeleting);
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteClient,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['clients']);
-      setSelectedClients([]);
-    },
-  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClients, setSelectedClients] = useState<number[]>([]);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingClient, setEditingClient] = useState<any | null>(null);
 
-  const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchClients());
+    }
+  }, [dispatch, status]);
+
+  const filteredClients = clients.filter(
+    (client) =>
+      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedClients(filteredClients.map(c => c.id));
+      setSelectedClients(filteredClients.map((c) => c.id));
     } else {
       setSelectedClients([]);
     }
   };
 
   const handleSelectClient = (id: number) => {
-    setSelectedClients(prev => prev.includes(id) ? prev.filter(cid => cid !== id) : [...prev, id]);
+    setSelectedClients((prev) =>
+      prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id]
+    );
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this client?')) {
-      deleteMutation.mutate(id);
+    if (window.confirm("Are you sure you want to delete this client?")) {
+      dispatch(deleteClient(id));
     }
   };
 
   const HandleClick = () => {
-    navigate('/addclient', { state: { from: 'clientManagement' } });
+    navigate("/addclient", { state: { from: "clientManagement" } });
   };
 
-  const handleEditClick = (client: Client) => {
+  const handleEditClick = (client: any) => {
     setEditingClient(client);
     setIsEditOpen(true);
   };
@@ -94,7 +72,7 @@ const ClientManagementPage: React.FC = () => {
     setEditingClient(null);
   };
 
-  if (isLoading) {
+  if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-lg text-gray-600">Loading clients...</div>
@@ -102,7 +80,7 @@ const ClientManagementPage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (status === "failed") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-lg text-red-600">
@@ -127,7 +105,10 @@ const ClientManagementPage: React.FC = () => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
               />
             </div>
-            <button className="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition-colors" onClick={HandleClick}>
+            <button
+              className="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition-colors"
+              onClick={HandleClick}
+            >
               Add Client
             </button>
           </div>
@@ -140,16 +121,31 @@ const ClientManagementPage: React.FC = () => {
                     <input
                       type="checkbox"
                       onChange={handleSelectAll}
-                      checked={selectedClients.length === filteredClients.length && filteredClients.length > 0}
+                      checked={
+                        selectedClients.length === filteredClients.length &&
+                        filteredClients.length > 0
+                      }
                       className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Client</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Address</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Documents</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Points</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Action</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Client
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Phone
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Address
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Documents
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Points
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -163,12 +159,17 @@ const ClientManagementPage: React.FC = () => {
                         className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="px-6 py-4">
+                    
+                    <td className="px-6 py-4 flex items-center">
+                      
+                       <img src={`https://ui-avatars.com/api/?name=${client.name}`} className="w-10 h-10 rounded-full mr-3 object-cover" />
+
                       <div>
                         <div className="text-sm font-medium text-gray-900">{client.name}</div>
                         <div className="text-sm text-gray-500">{client.email}</div>
                       </div>
                     </td>
+
                     <td className="px-6 py-4 text-sm text-gray-700">{client.phone}</td>
                     <td className="px-6 py-4 text-sm text-gray-700">{client.address}</td>
                     <td className="px-6 py-4">
@@ -188,10 +189,10 @@ const ClientManagementPage: React.FC = () => {
                         </button>
                         <button
                           onClick={() => handleDelete(client.id)}
-                          disabled={deleteMutation.isPending}
+                          disabled={deleting}
                           className="text-sm text-gray-600 hover:text-red-600 font-medium transition-colors disabled:opacity-50"
                         >
-                          {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+                          {deleting ? "Deleting..." : "Delete"}
                         </button>
                       </div>
                     </td>
@@ -207,12 +208,8 @@ const ClientManagementPage: React.FC = () => {
         </div>
       </div>
 
-    
       {isEditOpen && editingClient && (
-        <EditClientModal
-          client={editingClient}
-          onClose={closeEdit}
-        />
+        <EditClientModal client={editingClient} onClose={closeEdit} />
       )}
     </>
   );

@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import type { RootState } from "../app/store";
+import { Api_BASE_URL } from "../utils/config";
 
 export type Driver = {
   id: number;
@@ -14,15 +15,13 @@ export type Driver = {
   schedule?: { date: string; assignment: string; vehicle?: string }[];
 };
 
-// const API_BASE = "https://54d665185c0f.ngrok-free.app";
-const API_BASE = "http://192.168.0.79:8000/";
 
 
 export const fetchDrivers = createAsyncThunk(
   "drivers/fetchDrivers",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API_BASE}/drivers/`, {
+      const res = await axios.get(`${Api_BASE_URL}/drivers/`, {
         headers: { "ngrok-skip-browser-warning": "true" },
       });
       return res.data as Driver[];
@@ -36,7 +35,7 @@ export const addDriver = createAsyncThunk(
   "drivers/addDriver",
   async (driverData: Partial<Driver>, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API_BASE}/drivers/`, driverData, {
+      const res = await axios.post(`${Api_BASE_URL}/drivers/`, driverData, {
         headers: { "Content-Type": "application/json" },
       });
       return res.data as Driver;
@@ -50,7 +49,7 @@ export const updateDriver = createAsyncThunk(
   "drivers/updateDriver",
   async (driverData: Driver, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`${API_BASE}/drivers/${driverData.id}/`, driverData, {
+      const res = await axios.put(`${Api_BASE_URL}/drivers/${driverData.id}/`, driverData, {
         headers: { "Content-Type": "application/json" },
       });
       return res.data as Driver;
@@ -64,7 +63,7 @@ export const deleteDriver = createAsyncThunk(
   "drivers/deleteDriver",
   async (id: number, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_BASE}/drivers/${id}/`);
+      await axios.delete(`${Api_BASE_URL}/drivers/${id}/`);
       return id;
     } catch (err: any) {
       return rejectWithValue(err.response?.data || err.message);

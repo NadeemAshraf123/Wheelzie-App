@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X } from 'lucide-react';
+import { Api_BASE_URL } from '../../../utils/config';
 
 interface Client {
   id: number;
@@ -11,6 +12,7 @@ interface Client {
   address: string;
   document_name: string;
   points: number;
+  profile_image?: string | null; 
 }
 
 type FormValues = {
@@ -20,17 +22,26 @@ type FormValues = {
   address: string;
   document_name: string;
   points: number;
+  profile_image?: FileList; 
 };
 
-const API_URL = 'https://1fc9b9ba03e4.ngrok-free.app/clients/';
+// const API_URL = 'https://1fc9b9ba03e4.ngrok-free.app/clients/';
 
 interface Props {
   client: Client;
   onClose: () => void;
 }
 
-const updateClient = async (client: Client): Promise<Client> => {
-  const res = await fetch(`${API_URL}${client.id}/`, {
+const updateClient = async (client: any): Promise<Client> => {
+
+useEffect(()=>{
+  console.log("baseurl", Api_BASE_URL);
+
+
+}, []);
+
+
+const res = await fetch(`${Api_BASE_URL}/clients/${client.id}/`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
     body: JSON.stringify(client),
@@ -43,7 +54,9 @@ const updateClient = async (client: Client): Promise<Client> => {
 };
 
 const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
+
   const queryClient = useQueryClient();
+  const [previewImage, setPreviewImage] = useState<string | null>(client.profile_image || null);
 
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<FormValues>({
     defaultValues: {
@@ -57,7 +70,6 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
   });
 
   useEffect(() => {
-    // keep form in sync if client changes
     setValue('name', client.name);
     setValue('email', client.email);
     setValue('phone', client.phone);
@@ -66,14 +78,22 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
     setValue('points', client.points ?? 0);
   }, [client, setValue]);
 
+  
+  const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewImage(url);
+    }
+  };
+
   const mutation = useMutation({
-    mutationFn: (data: Client) => updateClient(data),
+    mutationFn: (data: any) => updateClient(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['clients']);
       onClose();
     },
     onError: (err: any) => {
-      // show minimal feedback; you can enhance with toast
       console.error('Update failed:', err);
       alert('Failed to update client: ' + (err?.message || 'Unknown error'));
     },
@@ -88,7 +108,9 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
       address: values.address,
       document_name: values.document_name,
       points: values.points ?? 0,
+      profile_image: client.profile_image || null, 
     };
+
     mutation.mutate(payload);
   };
 
@@ -100,6 +122,22 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X />
           </button>
+        </div>
+
+  
+        <div className="flex flex-col items-center mb-4">
+          <img
+            src={previewImage || "/placeholder-user.png"}
+            className="w-20 h-20 rounded-full object-cover border"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            {...register('profile_image')}
+            onChange={handleImagePreview}
+            className="mt-2 text-sm"
+          />
+          <p className="text-xs text-gray-400">*Image upload will activate once backend supports it</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
