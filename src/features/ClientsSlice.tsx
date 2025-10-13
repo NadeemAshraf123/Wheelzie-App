@@ -10,38 +10,81 @@ export interface Client {
   address: string;
   document_name: string;
   points: number;
-
   profile_image?: string | null;
 }
 
-export const fetchClients = createAsyncThunk("clients/fetchClients", async (_, { rejectWithValue }) => {
-  try {
-    const res = await axios.get(`${Api_BASE_URL}/clients/`, {
-      headers: { "ngrok-skip-browser-warning": "true" },
-    });
+export const fetchClients = createAsyncThunk(
+  "clients/fetchClients",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${Api_BASE_URL}/clients/`, {
+        headers: { "ngrok-skip-browser-warning": "true" },
+      });
 
-    
-    const safeData = res.data.map((client: any) => ({
-      ...client,
-      profile_image: client.profile_image ?? null,
-    }));
+      const safeData = res.data.map((client: any) => ({
+        ...client,
+        profile_image: client.profile_image ?? null,
+      }));
 
-    return safeData as Client[];
-  } catch (err: any) {
-    return rejectWithValue(err.response?.data || err.message);
+      return safeData as Client[];
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
   }
-});
+);
 
-export const deleteClient = createAsyncThunk("clients/deleteClient", async (id: number, { rejectWithValue }) => {
-  try {
-    await axios.delete(`${Api_BASE_URL}/clients/${id}/`, {
-      headers: { "ngrok-skip-browser-warning": "true" },
-    });
-    return id;
-  } catch (err: any) {
-    return rejectWithValue(err.response?.data || err.message);
+export const createClient = createAsyncThunk(
+  "clients/createClient",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${Api_BASE_URL}/clients/`, formData, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
   }
-});
+);
+
+export const deleteClient = createAsyncThunk(
+  "clients/deleteClient",
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${Api_BASE_URL}/clients/${id}/`, {
+        headers: { "ngrok-skip-browser-warning": "true" },
+      });
+      return id;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+export const updateClient = createAsyncThunk(
+  "clients/updateClient",
+  async (
+    { id, formData }: { id: number; formData: FormData },
+    { rejectWithValue }
+  ) => {
+    try {
+
+      const res = await axios.put(`${Api_BASE_URL}/clients/${id}/`, formData, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+      
+        },
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
 
 type ClientsState = {
   clients: Client[];
@@ -63,6 +106,7 @@ const clientsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
       .addCase(fetchClients.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -74,6 +118,27 @@ const clientsSlice = createSlice({
       .addCase(fetchClients.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
+      })
+
+      .addCase(createClient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createClient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.clients.unshift(action.payload);
+      })
+      .addCase(createClient.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+      .addCase(updateClient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const index = state.clients.findIndex(
+          (c) => c.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.clients[index] = action.payload;
+        }
       })
 
       .addCase(deleteClient.pending, (state) => {

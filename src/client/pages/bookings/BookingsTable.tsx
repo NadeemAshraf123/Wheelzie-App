@@ -37,9 +37,11 @@ interface Booking {
 
 const BookingsTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   const { data, status, error } = useSelector(
     (state: RootState) => state.bookings
   );
+
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -60,7 +62,9 @@ const BookingsTable: React.FC = () => {
     return (
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         <strong>Error: </strong>
-        {typeof error === 'object' ? error.detail  ||  JSON.stringify(error) : error || "Failed to load bookings"}
+        {typeof error === "object"
+          ? error.detail || JSON.stringify(error)
+          : error || "Failed to load bookings"}
       </div>
     );
 
@@ -82,11 +86,7 @@ const BookingsTable: React.FC = () => {
           AddBooking
         </button>
 
-
-
-          {showModal && (
-        <AddBookingForm onClose={() => setShowModal(false)} />
-      )}
+        {showModal && <AddBookingForm onClose={() => setShowModal(false)} />}
       </div>
 
       <div className="overflow-x-auto">

@@ -1,5 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
+import type { TypedUseSelectorHook } from 'react-redux';
+
+
 import bookingsReducer from '../features/BookingSlice';
 import uiReducer from '../features/uiSlice';
 import driversReducer from '../features/DriversSlice';
@@ -11,8 +14,8 @@ export const store = configureStore({
     bookings: bookingsReducer,
     ui: uiReducer,
     drivers: driversReducer,
-    clients: clientsReducer,
     cars: carsReducer,
+    clients: clientsReducer,
   },
 });
 
@@ -20,6 +23,4 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-
-export const useAppSelector: <TSelected>(selector: (state: RootState) => TSelected) => TSelected =
-  useSelector;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

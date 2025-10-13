@@ -1,7 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../../app/store";
+import { addDriver, selectDriversStatus, selectDriversError } from "../../../features/DriversSlice";
 
 type DriverFormData = {
   name: string;
@@ -19,7 +20,9 @@ interface AddDriverFormProps {
 }
 
 const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(selectDriversStatus);
+  const error = useAppSelector(selectDriversError);
 
   const {
     register,
@@ -38,61 +41,24 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data: DriverFormData) => {
-      const url = "https://1fc9b9ba03e4.ngrok-free.app/drivers/";
-
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("phone", data.phone);
-      formData.append("status", data.status);
-      formData.append("total_hours", data.total_hours.toString());
-      formData.append("total_trips", data.total_trips.toString());
-      formData.append("performance_rating", data.performance_rating.toString());
-
-      if (data.profileImage && data.profileImage.length > 0) {
-        formData.append("profile_image", data.profileImage[0]);
-      }
-
-      const res = await fetch(url, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || "Failed to add driver");
-      }
-
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["drivers"]);
+  const onSubmit = async (data: DriverFormData) => {
+    const resultAction = await dispatch(addDriver(data));
+    if (addDriver.fulfilled.match(resultAction)) {
       reset();
       onClose();
-    },
-    onError: (error: any) => {
-      console.error("Add driver failed:", error);
-      alert(`Failed to add driver: ${error?.message ?? error}`);
-    },
-  });
-
-  const onSubmit = (data: DriverFormData) => {
-    mutation.mutate(data);
+    } else {
+      alert(`Failed to add driver: ${resultAction.payload || resultAction.error.message}`);
+    }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center">
-        Add New Driver
-      </h2>
+    <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Add New Driver</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Profile Image */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Profile Image
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Profile Image</label>
           <input
             type="file"
             accept="image/*"
@@ -105,12 +71,11 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
             className="block w-full text-sm"
           />
           {errors.profileImage && (
-            <p className="text-red-500 text-xs">
-              {errors.profileImage.message as string}
-            </p>
+            <p className="text-red-500 text-xs">{errors.profileImage.message as string}</p>
           )}
         </div>
 
+        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name <span className="text-red-500">*</span>
@@ -120,20 +85,16 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
             placeholder="John Adams"
             {...register("name", {
               required: "Name is required",
-              minLength: {
-                value: 3,
-                message: "Name must be at least 3 characters",
-              },
+              minLength: { value: 3, message: "Name must be at least 3 characters" },
             })}
             className={`w-full border rounded-lg p-2 outline-none ${
               errors.name ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.name && (
-            <p className="text-red-500 text-xs">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
         </div>
 
+        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Email <span className="text-red-500">*</span>
@@ -152,11 +113,10 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
               errors.email ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
         </div>
 
+        {/* Phone */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Phone No. <span className="text-red-500">*</span>
@@ -172,15 +132,12 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
               errors.phone ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.phone && (
-            <p className="text-red-500 text-xs">{errors.phone.message}</p>
-          )}
+          {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
         </div>
 
+        {/* Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Status
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Status</label>
           <select
             {...register("status", { required: "Status is required" })}
             className={`w-full border rounded-lg p-2 outline-none ${
@@ -193,10 +150,9 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           </select>
         </div>
 
+        {/* Total Hours */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Total Hours
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Total Hours</label>
           <input
             type="number"
             {...register("total_hours", {
@@ -212,10 +168,9 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
+        {/* Total Trips */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Total Trips
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Total Trips</label>
           <input
             type="number"
             {...register("total_trips", {
@@ -231,6 +186,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
+        {/* Performance Rating */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Performance Rating (0–5)
@@ -248,12 +204,11 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
             }`}
           />
           {errors.performance_rating && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.performance_rating.message}
-            </p>
+            <p className="text-red-500 text-xs mt-1">{errors.performance_rating.message}</p>
           )}
         </div>
 
+        {/* Buttons */}
         <div className="flex justify-between items-center mt-4">
           <button
             type="button"
@@ -268,10 +223,10 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
 
           <button
             type="submit"
-            disabled={mutation.isLoading}
+            disabled={status === "loading"}
             className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 flex items-center"
           >
-            {mutation.isLoading ? (
+            {status === "loading" ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4 mr-2" /> Adding...
               </>
@@ -281,10 +236,9 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           </button>
         </div>
 
-        {mutation.isError && (
-          <p className="text-red-500 text-sm mt-2">
-            Error: {(mutation.error as Error)?.message}
-          </p>
+        {/* Error Message */}
+        {status === "failed" && error && (
+          <p className="text-red-500 text-sm mt-2">Error: {error}</p>
         )}
       </form>
     </div>

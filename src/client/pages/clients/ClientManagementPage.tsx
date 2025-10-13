@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Search, FileText } from "lucide-react";
@@ -159,11 +160,21 @@ const ClientManagementPage: React.FC = () => {
                         className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
-                    
-                    <td className="px-6 py-4 flex items-center">
-                      
-                       <img src={`https://ui-avatars.com/api/?name=${client.name}`} className="w-10 h-10 rounded-full mr-3 object-cover" />
 
+                    {/* ✅ UPDATED IMAGE HANDLING */}
+                    <td className="px-6 py-4 flex items-center">
+                      <img
+                        src={
+                          client.image ||
+                          client.profile_image ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(client.name)}`
+                        }
+                        onError={(e) =>
+                          (e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(client.name)}`)
+                        }
+                        className="w-10 h-10 rounded-full mr-3 object-cover"
+                        alt={client.name}
+                      />
                       <div>
                         <div className="text-sm font-medium text-gray-900">{client.name}</div>
                         <div className="text-sm text-gray-500">{client.email}</div>

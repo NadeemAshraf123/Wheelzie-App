@@ -33,17 +33,35 @@ export const fetchDrivers = createAsyncThunk(
 
 export const addDriver = createAsyncThunk(
   "drivers/addDriver",
-  async (driverData: Partial<Driver>, { rejectWithValue }) => {
+  async (driverData: any, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${Api_BASE_URL}/drivers/`, driverData, {
-        headers: { "Content-Type": "application/json" },
+      const formData = new FormData();
+      formData.append("name", driverData.name);
+      formData.append("email", driverData.email);
+      formData.append("phone", driverData.phone);
+      formData.append("status", driverData.status);
+      formData.append("total_hours", driverData.total_hours.toString());
+      formData.append("total_trips", driverData.total_trips.toString());
+      formData.append("performance_rating", driverData.performance_rating.toString());
+
+      if (driverData.profileImage && driverData.profileImage.length > 0) {
+        formData.append("profile_image", driverData.profileImage[0]);
+      }
+
+      const res = await axios.post(`${Api_BASE_URL}/drivers/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "ngrok-skip-browser-warning": "true",
+        },
       });
+
       return res.data as Driver;
     } catch (err: any) {
       return rejectWithValue(err.response?.data || err.message);
     }
   }
 );
+
 
 export const updateDriver = createAsyncThunk(
   "drivers/updateDriver",
