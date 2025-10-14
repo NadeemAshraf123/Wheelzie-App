@@ -8,34 +8,40 @@ import Reminders from '../../../components/dashboard/Reminders';
 
 const Dashboard: React.FC = () => {
   return (
-    <div className=" max-w-7xl p-4 space-y-4">
+    <div className=" max-w-7xl p-4 space-y-6">
       
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         <div className="xl:col-span-2">
-          <div className=" gap-6">
+          <div className="gap-6">
             <MetricsSection />
+          </div>
+          <div className='mt-6 space-y-4'>
+             <EarningsChart />
+          </div>
+          <div className='mt-4'>
+          <BookingsChart />
+
           </div>
         </div>
 
-        <div className="xl:col-span-1">
+        <div className="xl:col-span-1 space-y-4">
           <RentStatusPie />
+          <Reminders />
+
         </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-          <EarningsChart />
         </div>
         <div>
-          <BookingsChart />
         </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         <div className="xl:col-span-2 space-y-6">
-          <Reminders />
           <BookingsTable />
         </div>
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-// Define TypeScript interface based on your db.json structure
 interface Reminder {
   id: number;
   message: string;
@@ -48,7 +47,6 @@ const Reminders: React.FC = () => {
     );
   }
 
-  // Check if data exists and is an array
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
       <div className="bg-white shadow rounded-lg p-6">
@@ -62,7 +60,6 @@ const Reminders: React.FC = () => {
     );
   }
 
-  // Helper function to get priority styles
   const getPriorityStyles = (priority?: string) => {
     switch (priority) {
       case 'high':
@@ -92,7 +89,6 @@ const Reminders: React.FC = () => {
     }
   };
 
-  // Format date if available
   const formatDate = (dateString?: string) => {
     if (!dateString) return null;
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -103,7 +99,7 @@ const Reminders: React.FC = () => {
   };
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
+    <div className="bg-white w-sm shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Reminders</h3>
         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -149,7 +145,7 @@ const Reminders: React.FC = () => {
         })}
       </div>
       
-      {/* Optional: Add reminder stats */}
+      
       <div className="mt-4 pt-4 border-t border-gray-200">
         <div className="flex justify-between text-xs text-gray-500">
           <span>High: {data.filter((item: Reminder) => item.priority === 'high').length}</span>

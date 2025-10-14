@@ -19,6 +19,8 @@ interface RentStatusData {
 }
 
 const RentStatusDonut: React.FC = () => {
+
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["rentStatus"],
     queryFn: async () => {
@@ -85,7 +87,7 @@ const RentStatusDonut: React.FC = () => {
   };
 
   return (
-    <div className="bg-white w-sm min-h-11/12 rounded-2xl shadow-sm p-5">
+    <div className="bg-white w-sm min-h-4/12 rounded-2xl shadow-sm p-5">
     
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Rent Status</h3>

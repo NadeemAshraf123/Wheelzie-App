@@ -13,6 +13,7 @@ interface BookingFormProps {
 }
 
 const AddBookingForm: React.FC<BookingFormProps> = ({ onClose, editingBooking }) => {
+
   const dispatch = useDispatch<AppDispatch>();
   const { drivers } = useSelector((state: RootState) => state.drivers);
   const { cars } = useSelector((state: RootState) => state.cars);
@@ -30,11 +31,13 @@ const AddBookingForm: React.FC<BookingFormProps> = ({ onClose, editingBooking })
     end_date: "",
     rate_per_day: "",
     payment: "",
-    status: "Ongoing",
+    status: "Pending",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [ratePerDay, setRatePerDay] = useState<number>(0);
+
+  
 
   useEffect(() => {
     if (editingBooking) {
@@ -113,7 +116,9 @@ const AddBookingForm: React.FC<BookingFormProps> = ({ onClose, editingBooking })
     if (!validateForm()) return;
 
     const payload = {
+
       booking_id: editingBooking ? editingBooking.booking_id : "BK" + Date.now().toString().slice(-10),
+
       booking_date: formData.booking_date,
       client_id: Number(formData.client),
       driver_id: Number(formData.driver),
@@ -128,7 +133,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({ onClose, editingBooking })
 
     try {
       if (editingBooking) {
-        await dispatch(updateBooking({ id: editingBooking.id, ...payload }));
+        await dispatch(updateBooking({ id: editingBooking.id, bookingData: payload }));
         toast.success("Booking updated!");
       } else {
         await dispatch(addBooking(payload));
@@ -221,11 +226,13 @@ const AddBookingForm: React.FC<BookingFormProps> = ({ onClose, editingBooking })
             <label className="block text-sm font-medium">Status</label>
             <select name="status" value={formData.status} onChange={handleChange}
               className={`mt-1 block w-full border rounded px-3 py-2 ${errors.status ? "border-red-500" : "border-gray-300"}`}>
-              <option value="Ongoing">Ongoing</option>
               <option value="Pending">Pending</option>
-              <option value="Confirmed">Confirmed</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Returned">Returned</option>
               <option value="Cancelled">Cancelled</option>
+              <option value="Completed">Completed</option>
             </select>
+            {errors.status && <p className="text-red-500 text-xs">{errors.status}</p>}
           </div>
 
         
