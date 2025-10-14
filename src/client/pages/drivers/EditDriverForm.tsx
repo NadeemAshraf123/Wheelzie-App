@@ -3,11 +3,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+// Updated schema to match backend
 const driverSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   email: z.string().email("Invalid email format"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  status: z.enum(["On Duty", "Off Duty", "Sick Leave"]),
+  status: z.enum(["On Duty", "Half-Day Leave", "Sick Leave", "Off Duty"]),
   total_hours: z.coerce.number().min(0, "Total hours must be 0 or more"),
   total_trips: z.coerce.number().min(0, "Total trips must be 0 or more"),
   performance_rating: z.coerce
@@ -18,8 +19,7 @@ const driverSchema = z.object({
     .any()
     .optional()
     .refine(
-      (files) =>
-        !files?.length || files[0]?.size <= 2 * 1024 * 1024,
+      (files) => !files?.length || files[0]?.size <= 2 * 1024 * 1024,
       "Image must be 2MB or smaller"
     ),
 });
@@ -44,10 +44,10 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
   } = useForm<DriverFormData>({
     resolver: zodResolver(driverSchema),
     defaultValues: {
-      name: driver.name,
-      email: driver.email,
-      phone: driver.phone,
-      status: driver.status,
+      name: driver.name || "",
+      email: driver.email || "",
+      phone: driver.phone || "",
+      status: driver.status || "On Duty",
       total_hours: driver.total_hours ?? 0,
       total_trips: driver.total_trips ?? 0,
       performance_rating: driver.performance_rating ?? 0,
@@ -130,8 +130,9 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
           className="w-full border px-3 py-2 rounded"
         >
           <option value="On Duty">On Duty</option>
-          <option value="Off Duty">Off Duty</option>
+          <option value="Half-Day Leave">Half-Day Leave</option>
           <option value="Sick Leave">Sick Leave</option>
+          <option value="Off Duty">Off Duty</option>
         </select>
         {errors.status && (
           <p className="text-red-500 text-sm">{errors.status.message}</p>

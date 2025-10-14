@@ -56,7 +56,7 @@ const AddClientForm: React.FC = () => {
       if (createClient.fulfilled.match(resultAction)) {
         toast.success("Client added successfully!");
         reset();
-        navigate("/clients"); // Navigate to clients page after success
+        navigate("/clients");
       } else {
         toast.error("Failed to add client");
       }
@@ -67,16 +67,16 @@ const AddClientForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-[80vh] p-2">
       <div className="bg-white rounded-lg shadow-md max-w-3xl mx-auto p-6">
         <div className="flex items-center justify-between border-b pb-4">
           <h2 className="text-xl font-semibold">Add New Client</h2>
-          <button
+          {/* <button
             onClick={() => navigate("/clients")}
             className="text-gray-500 hover:text-gray-700"
           >
             <X size={20} />
-          </button>
+          </button> */}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4">

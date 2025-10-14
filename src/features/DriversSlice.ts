@@ -12,6 +12,9 @@ export type Driver = {
   status: string;
   profile_image?: string;
   address?: string | null;
+  total_hours?: number | null;
+  total_trips?: number | null;
+  performance_rating?: number | null;
   schedule?: { date: string; assignment: string; vehicle?: string }[];
 };
 
@@ -65,10 +68,13 @@ export const addDriver = createAsyncThunk(
 
 export const updateDriver = createAsyncThunk(
   "drivers/updateDriver",
-  async (driverData: Driver, { rejectWithValue }) => {
+  async ({ id, data }: { id: number; data: FormData }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`${Api_BASE_URL}/drivers/${driverData.id}/`, driverData, {
-        headers: { "Content-Type": "application/json" },
+      const res = await axios.put(`${Api_BASE_URL}/drivers/${id}/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data", 
+          "ngrok-skip-browser-warning": "true",
+        },
       });
       return res.data as Driver;
     } catch (err: any) {

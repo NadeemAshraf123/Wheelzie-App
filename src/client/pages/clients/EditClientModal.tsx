@@ -13,7 +13,7 @@ interface Client {
   document_name: string;
   points: number;
   image?: string | null;
-  profile_image?: string | null; 
+  profile_image?: string | null;
 }
 
 interface Props {
@@ -28,7 +28,7 @@ type FormValues = {
   address: string;
   document_name: string;
   points: number;
-  image?: FileList; 
+  image?: FileList;
 };
 
 const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
@@ -78,14 +78,11 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
     formData.append("document_name", values.document_name);
     formData.append("points", String(values.points ?? 0));
 
-    
     if (values.image && values.image[0]) {
       formData.append("image", values.image[0]);
     }
 
-    
     dispatch(updateClient({ id: client.id, formData }));
-
     onClose();
   };
 
@@ -100,8 +97,10 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
         </div>
 
         <div className="flex flex-col items-center mb-4">
-          <img src={previewImage || "/placeholder-user.png"} className="w-20 h-20 rounded-full object-cover border" />
-          
+          <img
+            src={previewImage || "/placeholder-user.png"}
+            className="w-20 h-20 rounded-full object-cover border"
+          />
           <input
             type="file"
             accept="image/*"
@@ -112,19 +111,76 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input {...register("name", { required: true })} className="w-full border p-2 rounded" />
-          <input {...register("email", { required: true })} className="w-full border p-2 rounded" />
-          <input {...register("phone", { required: true })} className="w-full border p-2 rounded" />
-          <textarea {...register("address", { required: true })} className="w-full border p-2 rounded"></textarea>
-          <input {...register("document_name", { required: true })} className="w-full border p-2 rounded" />
-          <input type="number" {...register("points")} className="w-full border p-2 rounded" />
+          <div>
+            <input
+              {...register("name", { required: "Name is required" })}
+              className="w-full border p-2 rounded"
+              placeholder="Name"
+            />
+            {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+          </div>
+
+          <div>
+            <input
+              {...register("email", {
+                required: "Email is required",
+                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
+              })}
+              className="w-full border p-2 rounded"
+              placeholder="Email"
+            />
+            {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+          </div>
+
+          <div>
+            <input
+              {...register("phone", {
+                required: "Phone is required",
+                minLength: { value: 10, message: "Minimum 10 digits" },
+              })}
+              className="w-full border p-2 rounded"
+              placeholder="Phone"
+            />
+            {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+          </div>
+
+          <div>
+            <textarea
+              {...register("address", { required: "Address is required" })}
+              className="w-full border p-2 rounded"
+              placeholder="Address"
+            ></textarea>
+            {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
+          </div>
+
+          <div>
+            <input
+              {...register("document_name", { required: "Document Name is required" })}
+              className="w-full border p-2 rounded"
+              placeholder="Document Name"
+            />
+            {errors.document_name && (
+              <p className="text-red-500 text-xs">{errors.document_name.message}</p>
+            )}
+          </div>
+
+          <input
+            type="number"
+            {...register("points")}
+            className="w-full border p-2 rounded"
+            placeholder="Points"
+          />
 
           <div className="flex justify-end gap-2">
             <button type="button" onClick={onClose} className="px-3 py-1 bg-gray-300 rounded">
               Cancel
             </button>
-            <button type="submit" disabled={isSubmitting} className="px-3 py-1 bg-blue-600 text-white rounded">
-              Save
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-3 py-1 bg-blue-600 text-white rounded"
+            >
+              {isSubmitting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

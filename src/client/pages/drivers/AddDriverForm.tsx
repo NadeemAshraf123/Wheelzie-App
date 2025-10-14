@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import ModalWrapper from "../ModalWrapper";
 import { useAppDispatch, useAppSelector } from "../../../app/store";
 import { addDriver, selectDriversStatus, selectDriversError } from "../../../features/DriversSlice";
 
@@ -16,6 +17,7 @@ type DriverFormData = {
 };
 
 interface AddDriverFormProps {
+
   onClose: () => void;
 }
 
@@ -52,11 +54,12 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
   };
 
   return (
+    // <ModalWrapper onClose={onClose} >
     <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Add New Driver</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Profile Image */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-700">Profile Image</label>
           <input
@@ -75,7 +78,6 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name <span className="text-red-500">*</span>
@@ -94,7 +96,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
         </div>
 
-        {/* Email */}
+      
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Email <span className="text-red-500">*</span>
@@ -116,7 +118,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
         </div>
 
-        {/* Phone */}
+    
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Phone No. <span className="text-red-500">*</span>
@@ -135,7 +137,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
         </div>
 
-        {/* Status */}
+      
         <div>
           <label className="block text-sm font-medium text-gray-700">Status</label>
           <select
@@ -150,7 +152,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           </select>
         </div>
 
-        {/* Total Hours */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-700">Total Hours</label>
           <input
@@ -168,7 +170,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Total Trips */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-700">Total Trips</label>
           <input
@@ -186,7 +188,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Performance Rating */}
+      
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Performance Rating (0–5)
@@ -208,7 +210,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Buttons */}
+        
         <div className="flex justify-between items-center mt-4">
           <button
             type="button"
@@ -236,12 +238,13 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           </button>
         </div>
 
-        {/* Error Message */}
+    
         {status === "failed" && error && (
           <p className="text-red-500 text-sm mt-2">Error: {error}</p>
         )}
       </form>
     </div>
+    // </ModalWrapper>
   );
 };
 

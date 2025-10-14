@@ -1,11 +1,12 @@
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Search, FileText } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import EditClientModal from "./EditClientModal";
+import AddClientForm from "./AddClientForm";
 import {
   fetchClients,
+  createClient,
   deleteClient,
   selectClients,
   selectClientsStatus,
@@ -14,8 +15,7 @@ import {
 } from "../../../features/ClientsSlice";
 
 const ClientManagementPage: React.FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
 
   const clients = useSelector(selectClients);
   const status = useSelector(selectClientsStatus);
@@ -26,6 +26,7 @@ const ClientManagementPage: React.FC = () => {
   const [selectedClients, setSelectedClients] = useState<number[]>([]);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any | null>(null);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   useEffect(() => {
     if (status === "idle") {
@@ -59,8 +60,8 @@ const ClientManagementPage: React.FC = () => {
     }
   };
 
-  const HandleClick = () => {
-    navigate("/addclient", { state: { from: "clientManagement" } });
+  const handleAddClick = () => {
+    setIsAddOpen(true);
   };
 
   const handleEditClick = (client: any) => {
@@ -71,6 +72,32 @@ const ClientManagementPage: React.FC = () => {
   const closeEdit = () => {
     setIsEditOpen(false);
     setEditingClient(null);
+  };
+
+  const handleAddClient = (data: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    document_name: string;
+    file?: File;
+  }) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("address", data.address);
+    formData.append("document_name", data.document_name);
+    if (data.file) formData.append("profile_image", data.file);
+
+    // ✅ Dispatch createClient instead of fetchClient
+    dispatch(createClient(formData))
+      .unwrap()
+      .then(() => {
+        toast.success("Client added successfully");
+        setIsAddOpen(false);
+      })
+      .catch(() => toast.error("Failed to add client"));
   };
 
   if (status === "loading") {
@@ -108,7 +135,7 @@ const ClientManagementPage: React.FC = () => {
             </div>
             <button
               className="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition-colors"
-              onClick={HandleClick}
+              onClick={handleAddClick}
             >
               Add Client
             </button>
@@ -151,7 +178,10 @@ const ClientManagementPage: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredClients.map((client) => (
-                  <tr key={client.id} className="hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={client.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
                     <td className="px-6 py-4">
                       <input
                         type="checkbox"
@@ -161,22 +191,27 @@ const ClientManagementPage: React.FC = () => {
                       />
                     </td>
 
-                    {/* ✅ UPDATED IMAGE HANDLING */}
                     <td className="px-6 py-4 flex items-center">
                       <img
                         src={
                           client.image ||
                           client.profile_image ||
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(client.name)}`
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            client.name
+                          )}`
                         }
                         onError={(e) =>
-                          (e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(client.name)}`)
+                          (e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            client.name
+                          )}`)
                         }
                         className="w-10 h-10 rounded-full mr-3 object-cover"
                         alt={client.name}
                       />
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{client.name}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {client.name}
+                        </div>
                         <div className="text-sm text-gray-500">{client.email}</div>
                       </div>
                     </td>
@@ -221,6 +256,23 @@ const ClientManagementPage: React.FC = () => {
 
       {isEditOpen && editingClient && (
         <EditClientModal client={editingClient} onClose={closeEdit} />
+      )}
+
+      {isAddOpen && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-xl  max-h-[100vh] p-2  w-[500px] relative">
+            <button
+              onClick={() => setIsAddOpen(false)}
+              className="absolute top-2 right-3 text-gray-500  hover:text-gray-800 text-xl"
+            >
+              ✖
+            </button>
+            <AddClientForm
+              onClose={() => setIsAddOpen(false)}
+              onSubmit={handleAddClient}
+            />
+          </div>
+        </div>
       )}
     </>
   );
