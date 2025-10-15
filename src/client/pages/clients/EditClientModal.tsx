@@ -86,6 +86,26 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
     onClose();
   };
 
+ const formatPhoneNumber = (value: string) => {
+  
+  const numbers = value.replace(/\D/g, '');
+  
+
+  if (numbers.length <= 3) {
+    return numbers;
+  } else if (numbers.length <= 6) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+  } else {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6, 11)}`;
+  }
+};
+
+const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  setValue("phone", formatted);
+};
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg">
@@ -136,10 +156,28 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
             <input
               {...register("phone", {
                 required: "Phone is required",
-                minLength: { value: 10, message: "Minimum 10 digits" },
+                pattern: {
+                  value: /^\d{3}-\d{3}-\d{5}$/,
+                  message: "phone must be in formar: 111-222-33333(11 digits total"
+                },
+                validate: {
+                  positive: (value) => {
+                    const numbersOnly = value.replace(/-/g, '');
+                    return!numbersOnly.startsWith('-') || "Phone number cannot be negative"
+                  },
+                 exactLength: (value) => {
+                    const numbersOnly = value.replace(/-/g, '');
+                    return numbersOnly.length === 11 || " Phone number must be exactly 11 digits"
+                  }
+                }
+
               })}
+              onChange={(e) => {
+                register("phone").onChange(e);
+                handlePhoneChange(e);
+              }}
               className="w-full border p-2 rounded"
-              placeholder="Phone"
+              placeholder="111-222-33333"
             />
             {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
           </div>

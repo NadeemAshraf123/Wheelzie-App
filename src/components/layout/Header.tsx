@@ -30,7 +30,7 @@ const Header: React.FC = () => {
             <input 
               type="text" 
               placeholder="Search..." 
-              className="pl-10 pr-4 py-2 w-64 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="pl-6 pr-2 py-2 w-32 md:pl-10 pr-4 py-2 w-56 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
           

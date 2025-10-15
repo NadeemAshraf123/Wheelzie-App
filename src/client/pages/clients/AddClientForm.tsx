@@ -14,10 +14,15 @@ type ClientFormData = {
   address: string;
   document_name: string;
   points: number;
-  image?: FileList;
+  image: FileList;
 };
 
-const AddClientForm: React.FC = () => {
+interface AddClientFormProps {
+  onSubmit: (data: ClientFormData) => void;
+  onClose: () => void;
+}
+
+const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -35,10 +40,17 @@ const AddClientForm: React.FC = () => {
       document_name: "",
       points: 0,
     },
+    mode: "onChange", 
   });
 
   const onSubmit = async (data: ClientFormData) => {
     try {
+      
+      if (!data.image || data.image.length === 0) {
+        toast.error("Profile image is required");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
@@ -56,6 +68,7 @@ const AddClientForm: React.FC = () => {
       if (createClient.fulfilled.match(resultAction)) {
         toast.success("Client added successfully!");
         reset();
+        onClose();
         navigate("/clients");
       } else {
         toast.error("Failed to add client");
@@ -71,46 +84,62 @@ const AddClientForm: React.FC = () => {
       <div className="bg-white rounded-lg shadow-md max-w-3xl mx-auto p-6">
         <div className="flex items-center justify-between border-b pb-4">
           <h2 className="text-xl font-semibold">Add New Client</h2>
-          {/* <button
-            onClick={() => navigate("/clients")}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X size={20} />
-          </button> */}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4">
+          
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Profile Image
+              Profile Image <span className="text-red-500">*</span>
             </label>
             <input
               type="file"
               accept="image/*"
-              {...register("image")}
-              className="block w-full text-sm"
+              {...register("image", {
+                required: "Profile image is required",
+                validate: {
+                  fileSize: (files) => 
+                    files[0]?.size <= 2 * 1024 * 1024 || "Image must be 2MB or smaller",
+                  fileType: (files) =>
+                    ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(files[0]?.type) || 
+                    "Only JPEG, PNG, and GIF images are allowed"
+                }
+              })}
+              className="block w-full text-sm border rounded-lg p-2"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              {...register("name", { required: "Name is required" })}
-              className={`w-full border rounded-lg p-2 outline-none ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-xs">{errors.name.message}</p>
+            {errors.image && (
+              <p className="text-red-500 text-xs mt-1">{errors.image.message}</p>
             )}
           </div>
 
+      
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Email *
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              {...register("name", { 
+                required: "Name is required",
+                minLength: {
+                  value: 2,
+                  message: "Name must be at least 2 characters"
+                }
+              })}
+              className={`w-full border rounded-lg p-2 outline-none ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Enter full name"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -124,67 +153,96 @@ const AddClientForm: React.FC = () => {
               className={`w-full border rounded-lg p-2 outline-none ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
+              placeholder="Enter email address"
             />
             {errors.email && (
-              <p className="text-red-500 text-xs">{errors.email.message}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
             )}
           </div>
 
+          
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Phone *
+              Phone <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
               {...register("phone", {
                 required: "Phone number is required",
-                pattern: {
-                  value: /^[0-9-]+$/,
-                  message: "Invalid phone format",
+                pattern: { 
+                  value: /^\d{3}-\d{3}-\d{5}$/, 
+                  message: "Phone must be in format: 111-222-33333" 
                 },
+                validate: {
+                  positive: (value) => {
+                    const numbersOnly = value.replace(/-/g, '');
+                    return !numbersOnly.startsWith('-') || "Phone number cannot be negative";
+                  },
+                  exactLength: (value) => {
+                    const numbersOnly = value.replace(/-/g, '');
+                    return numbersOnly.length === 11 || "Phone number must be exactly 11 digits";
+                  }
+                }
               })}
               className={`w-full border rounded-lg p-2 outline-none ${
                 errors.phone ? "border-red-500" : "border-gray-300"
               }`}
+              placeholder="111-222-33333"
             />
             {errors.phone && (
-              <p className="text-red-500 text-xs">{errors.phone.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Address *
-            </label>
-            <textarea
-              {...register("address", { required: "Address is required" })}
-              rows={3}
-              className={`w-full border rounded-lg p-2 outline-none ${
-                errors.address ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.address && (
-              <p className="text-red-500 text-xs">{errors.address.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Document Name *
-            </label>
-            <input
-              type="text"
-              {...register("document_name", { required: "Document name is required" })}
-              className={`w-full border rounded-lg p-2 outline-none ${
-                errors.document_name ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.document_name && (
-              <p className="text-red-500 text-xs">{errors.document_name.message}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
             )}
           </div>
 
         
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Address <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              {...register("address", { 
+                required: "Address is required",
+                minLength: {
+                  value: 5,
+                  message: "Address must be at least 5 characters"
+                }
+              })}
+              rows={3}
+              className={`w-full border rounded-lg p-2 outline-none ${
+                errors.address ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Enter full address"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>
+            )}
+          </div>
+
+        
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Document Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              {...register("document_name", { 
+                required: "Document name is required",
+                minLength: {
+                  value: 2,
+                  message: "Document name must be at least 2 characters"
+                }
+              })}
+              className={`w-full border rounded-lg p-2 outline-none ${
+                errors.document_name ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Enter document name"
+            />
+            {errors.document_name && (
+              <p className="text-red-500 text-xs mt-1">{errors.document_name.message}</p>
+            )}
+          </div>
+
+          {/* Points Field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Points
@@ -192,18 +250,23 @@ const AddClientForm: React.FC = () => {
             <input
               type="number"
               {...register("points", {
-                min: { value: 0, message: "Points cannot be negative" },
+                min: { 
+                  value: 0, 
+                  message: "Points cannot be negative" 
+                },
                 valueAsNumber: true,
               })}
               className={`w-full border rounded-lg p-2 outline-none ${
                 errors.points ? "border-red-500" : "border-gray-300"
               }`}
+              placeholder="Enter points"
             />
             {errors.points && (
-              <p className="text-red-500 text-xs">{errors.points.message}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.points.message}</p>
             )}
           </div>
 
+          {/* Submit Button */}
           <div className="flex justify-end pt-4 border-t">
             <button
               type="submit"

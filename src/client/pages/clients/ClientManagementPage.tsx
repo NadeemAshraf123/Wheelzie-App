@@ -191,7 +191,7 @@ const ClientManagementPage: React.FC = () => {
                       />
                     </td>
 
-                    <td className="px-6 py-4 flex items-center">
+                    <td className=" px-2 py-2  mt-10 md:px-6 md:py-4  flex items-center md:flex items-center ">
                       <img
                         src={
                           client.image ||
@@ -209,7 +209,7 @@ const ClientManagementPage: React.FC = () => {
                         alt={client.name}
                       />
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm  font-medium text-gray-900">
                           {client.name}
                         </div>
                         <div className="text-sm text-gray-500">{client.email}</div>

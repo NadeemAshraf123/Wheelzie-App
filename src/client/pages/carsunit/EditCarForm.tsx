@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type Car = {
   id: number;
@@ -16,6 +16,9 @@ interface Props {
 }
 
 const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
+  
+  const [previewImage, setPreviewImage] = useState<string | null>(car.image || null);
+
   const [formData, setFormData] = useState({
     name: car.name,
     model_type: car.model_type || "",
@@ -36,10 +39,21 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setPreviewImage(URL.createObjectURL(selectedFile)); 
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
+
+  
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
@@ -50,6 +64,7 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -58,6 +73,20 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      
+      {previewImage && (
+        <img
+          src={previewImage}
+          alt="Preview"
+          className="w-32 h-32 object-cover rounded-full border mx-auto mb-3"
+        />
+      )}
+
+      <div>
+        <label className="block font-medium mb-1">Upload Image</label>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+      </div>
+
       <div>
         <label className="block font-medium mb-1">Car Name</label>
         <input
@@ -103,11 +132,6 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
           className={`w-full border px-3 py-2 rounded ${errors.daily_rate ? "border-red-500" : ""}`}
         />
         {errors.daily_rate && <p className="text-red-500 text-sm mt-1">{errors.daily_rate}</p>}
-      </div>
-
-      <div>
-        <label className="block font-medium mb-1">Upload Image</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
 
       <div className="flex justify-end gap-2">

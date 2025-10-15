@@ -12,9 +12,9 @@ export type Driver = {
   status: string;
   profile_image?: string;
   address?: string | null;
-  total_hours?: number | null;
-  total_trips?: number | null;
-  performance_rating?: number | null;
+  // total_hours?: number | null;
+  // total_trips?: number | null;
+  // performance_rating?: number | null;
   schedule?: { date: string; assignment: string; vehicle?: string }[];
 };
 
@@ -43,9 +43,9 @@ export const addDriver = createAsyncThunk(
       formData.append("email", driverData.email);
       formData.append("phone", driverData.phone);
       formData.append("status", driverData.status);
-      formData.append("total_hours", driverData.total_hours.toString());
-      formData.append("total_trips", driverData.total_trips.toString());
-      formData.append("performance_rating", driverData.performance_rating.toString());
+      // formData.append("total_hours", driverData.total_hours.toString());
+      // formData.append("total_trips", driverData.total_trips.toString());
+      // formData.append("performance_rating", driverData.performance_rating.toString());
 
       if (driverData.profileImage && driverData.profileImage.length > 0) {
         formData.append("profile_image", driverData.profileImage[0]);

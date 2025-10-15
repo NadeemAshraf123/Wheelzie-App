@@ -62,7 +62,6 @@ const BookingsTable: React.FC = () => {
           <div>Are you sure you want to delete this booking?</div>
           <div className="mt-2 flex gap-2">
             <button
-            
               onClick={() => {
                 dispatch(deleteBooking(id))
                   .unwrap()
@@ -199,9 +198,8 @@ const BookingsTable: React.FC = () => {
                         ? "bg-yellow-100 text-yellow-800"
                         : booking.status.toLowerCase() === "cancelled"
                         ? "bg-red-100 text-red-800"
-                        : booking.status.toLowerCase() === "completed"                        
+                        : booking.status.toLowerCase() === "completed"
                         ? "bg-purple-100 text-purple-800"
-
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >

@@ -1,7 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
-import ModalWrapper from "../ModalWrapper";
 import { useAppDispatch, useAppSelector } from "../../../app/store";
 import { addDriver, selectDriversStatus, selectDriversError } from "../../../features/DriversSlice";
 
@@ -10,14 +9,10 @@ type DriverFormData = {
   email: string;
   phone: string;
   status: string;
-  total_hours: number;
-  total_trips: number;
-  performance_rating: number;
-  profileImage?: FileList;
+  profileImage: FileList; 
 };
 
 interface AddDriverFormProps {
-
   onClose: () => void;
 }
 
@@ -37,9 +32,6 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
       email: "",
       phone: "",
       status: "On Duty",
-      total_hours: 0,
-      total_trips: 0,
-      performance_rating: 0,
     },
   });
 
@@ -54,22 +46,29 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
   };
 
   return (
-    // <ModalWrapper onClose={onClose} >
+    
     <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Add New Driver</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Profile Image <span className="text-red-500">*</span>
+          </label>
           <input
             type="file"
             accept="image/*"
             {...register("profileImage", {
-              validate: (files) =>
-                !files?.length ||
-                files[0].size <= 2 * 1024 * 1024 ||
-                "Image must be 2MB or smaller",
+              required: "Profile image is required",
+              validate: {
+                fileSize: (files) =>
+                  files[0]?.size <= 2 * 1024 * 1024 ||
+                  "Image must be 2MB or smaller",
+                fileType: (files) =>
+                  ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(files[0]?.type) ||
+                  "Only JPEG, PNG, and GIF images are allowed"
+              }
             })}
             className="block w-full text-sm"
           />
@@ -128,7 +127,20 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
             placeholder="111-222-3333"
             {...register("phone", {
               required: "Phone number is required",
-              pattern: { value: /^[0-9-]+$/, message: "Invalid phone format" },
+              pattern: { 
+                value: /^\d{3}-\d{3}-\d{5}$/, 
+                message: "Phone must be in format: 111-222-33333 (11 digits total)" 
+              },
+              validate: {
+                positive: (value) => {
+                  const numbersOnly = value.replace(/-/g, '');
+                  return !numbersOnly.startsWith('-') || "Phone number cannot be negative"
+                },
+                exactLength: (value) => {
+                  const numbersOnly = value.replace(/-/g, '');
+                  return numbersOnly.length === 11 || "Phone number must be exactly 11 digits"
+                }
+              }
             })}
             className={`w-full border rounded-lg p-2 outline-none ${
               errors.phone ? "border-red-500" : "border-gray-300"
@@ -150,64 +162,6 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
             <option value="Sick Leave">Sick Leave</option>
             <option value="Off Duty">Off Duty</option>
           </select>
-        </div>
-
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Total Hours</label>
-          <input
-            type="number"
-            {...register("total_hours", {
-              required: "Total hours required",
-              min: { value: 0, message: "Cannot be negative" },
-            })}
-            className={`w-full border rounded-lg p-2 outline-none ${
-              errors.total_hours ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {errors.total_hours && (
-            <p className="text-red-500 text-xs">{errors.total_hours.message}</p>
-          )}
-        </div>
-
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Total Trips</label>
-          <input
-            type="number"
-            {...register("total_trips", {
-              required: "Total trips required",
-              min: { value: 0, message: "Cannot be negative" },
-            })}
-            className={`w-full border rounded-lg p-2 outline-none ${
-              errors.total_trips ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {errors.total_trips && (
-            <p className="text-red-500 text-xs">{errors.total_trips.message}</p>
-          )}
-        </div>
-
-      
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Performance Rating (0–5)
-          </label>
-          <input
-            type="number"
-            step="0.1"
-            {...register("performance_rating", {
-              required: "Performance rating required",
-              min: { value: 0, message: "Min is 0" },
-              max: { value: 5, message: "Max is 5" },
-            })}
-            className={`w-full border rounded-lg p-2 outline-none ${
-              errors.performance_rating ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {errors.performance_rating && (
-            <p className="text-red-500 text-xs mt-1">{errors.performance_rating.message}</p>
-          )}
         </div>
 
         
@@ -244,7 +198,6 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
         )}
       </form>
     </div>
-    // </ModalWrapper>
   );
 };
 
