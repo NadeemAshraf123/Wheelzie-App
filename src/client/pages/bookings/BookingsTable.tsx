@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AddBookingForm from "./AddBookingsForm";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -32,6 +32,7 @@ const BookingsTable: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     if (status === "idle") {
@@ -69,7 +70,7 @@ const BookingsTable: React.FC = () => {
                     toast.dismiss(t.id);
                     toast.success("Booking deleted");
                   })
-                  .catch((err) => {
+                  .catch(() => {
                     toast.dismiss(t.id);
                     toast.error("Failed to delete booking");
                   });
@@ -96,6 +97,20 @@ const BookingsTable: React.FC = () => {
     setShowModal(true);
   };
 
+
+  const filteredBookings = useMemo(() => {
+    if (!data || data.length === 0) return [];
+
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return data;
+
+  
+    return data.filter((booking: Booking) =>
+      booking.booking_id.toLowerCase().includes(term)
+    );
+  }, [data, searchTerm]);
+
+
   if (status === "loading")
     return (
       <div className="flex justify-center items-center h-32">
@@ -109,18 +124,23 @@ const BookingsTable: React.FC = () => {
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         <strong>Error: </strong>
         {typeof error === "object"
-          ? error.detail || JSON.stringify(error)
-          : error || "Failed to load bookings"}
+          ? (error as any).detail || JSON.stringify(error)
+          : (error as any) || "Failed to load bookings"}
       </div>
     );
 
   return (
     <div className=" bg-gray-100 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className=" p-1 text-xl font-bold text-gray-400">Bookings</h2>
+      <div className="flex justify-between items-center mb-4 p-2">
+        <input
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type="search"
+          placeholder="Search by booking id..."
+          className="px-4 py-2 border border-gray-300 rounded-lg w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"        />
         <button
           onClick={handleAddNew}
-          className="px-3 py-1 bg-red-600 cursor-pointer rounded-lg text-white hover:bg-red-700"
+          className="px-3 py-1 bg-blue-500 cursor-pointer rounded-lg text-white hover:bg-blue-700"
         >
           + Add Booking
         </button>
@@ -167,7 +187,7 @@ const BookingsTable: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {data.map((booking: Booking) => (
+            {filteredBookings.map((booking: Booking) => (
               <tr
                 key={booking.booking_id}
                 className="hover:bg-gray-50 transition"
@@ -224,6 +244,13 @@ const BookingsTable: React.FC = () => {
                 </td>
               </tr>
             ))}
+            {filteredBookings.length === 0 && (
+              <tr>
+                <td colSpan={11} className="px-6 py-8 text-center text-gray-500">
+                  No bookings found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

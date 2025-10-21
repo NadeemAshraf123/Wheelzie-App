@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -17,6 +17,7 @@ interface AddCarFormProps {
 }
 
 const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
+  const [preview, setPreview] = React.useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const {
@@ -50,9 +51,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
       const res = await fetch(url, {
         method: "POST",
         body: formData,
-      headers: { "ngrok-skip-browser-warning": "true"
-
-        },
+        headers: { "ngrok-skip-browser-warning": "true" },
       });
 
       if (!res.ok) {
@@ -63,7 +62,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["cars"]);
+      queryClient.invalidateQueries({queryKey: ["cars"] });
       reset();
       onClose();
     },
@@ -72,6 +71,9 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
       alert(`Failed to add car: ${error?.message ?? error}`);
     },
   });
+
+
+ 
 
   const onSubmit = (data: CarFormData) => {
     mutation.mutate(data);
@@ -84,46 +86,75 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Car Image
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image", {
-              validate: (files) =>
-                !files?.length ||
-                files[0].size <= 2 * 1024 * 1024 ||
-                "Image must be 2MB or smaller",
-            })}
-            className="block w-full text-sm"
-          />
-          {errors.image && (
-            <p className="text-red-500 text-xs">{errors.image.message as string}</p>
-          )}
-        </div>
+     
+        <input
+          type="file"
+          id="car-image-upload"
+          accept="image/*"
+          {...register("image", {
+            validate: (files) =>
+              !files?.length ||
+              files[0].size <= 2 * 1024 * 1024 ||
+              "Image must be 2MB or smaller",
+            onChange: (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const previewUrl = URL.createObjectURL(file);
+                setPreview(previewUrl);
+              }
+            },
+          })}
+          className="hidden"
+        />
+
+        <label htmlFor="car-image-upload" className="block cursor-pointer">
+          <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden hover:border-blue-500 transition">
+            {preview ? (
+              <img
+                src={preview}
+                alt="Selected car"
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <span className="text-gray-500">Click to upload car image</span>
+            )}
+          </div>
+        </label>
+
+        {errors.image && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors.image.message as string}
+          </p>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Car Name <span className="text-red-500">*</span>
+            Car Name <span className="text-blue-500">*</span>
           </label>
           <input
             type="text"
             placeholder="Toyota Corolla"
             {...register("name", {
               required: "Name is required",
-              minLength: { value: 2, message: "Name must be at least 2 characters" },
+              minLength: {
+                value: 2,
+                message: "Name must be at least 2 characters",
+              },
             })}
             className={`w-full border rounded-lg p-2 outline-none ${
               errors.name ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-red-500 text-xs">{errors.name.message}</p>
+          )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Model</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Model
+            <span className="text-blue-500">*</span>
+          </label>
           <input
             type="text"
             placeholder="2025"
@@ -133,7 +164,10 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">License Plate</label>
+          <label className="block text-sm font-medium text-gray-700">
+            License Plate
+            <span className="text-blue-500">*</span>
+          </label>
           <input
             type="text"
             placeholder="ABC-123"
@@ -143,7 +177,10 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Daily Rate</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Daily Rate
+            <span className="text-blue-500">*</span>
+          </label>
           <input
             type="number"
             {...register("daily_rate", { min: 0 })}
@@ -166,7 +203,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={mutation.isLoading}
-            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 flex items-center"
+            className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700 flex items-center"
           >
             {mutation.isLoading ? (
               <>

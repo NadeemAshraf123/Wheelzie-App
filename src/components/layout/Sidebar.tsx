@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePage } from "../../features/uiSlice";
 import type { AppDispatch, RootState } from "../../app/store";
@@ -16,7 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ( { isOpen, onClose  } ) => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -24,6 +25,7 @@ const Sidebar = () => {
 
   const handleNav = (page: string) => {
     dispatch(setActivePage(page));
+    onClose();
   };
 
   const navItemClass = (page: string) =>
@@ -34,9 +36,19 @@ const Sidebar = () => {
     }`;
 
   return (
-    <aside className="w-60 h-screen bg-white shadow-sm flex flex-col justify-between">
+    <aside 
+         className={`fixed md:static z-50 bg-white shadow-sm h-screen w-60 flex flex-col justify-between transition-transform duration-300 
+                      ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+                 >
+            <button 
+                onClick={onClose}
+                className="md:hidden absolute top-3 right-3 p-2"
+              >
+                <X size={22} className="text-red-600 font-extrabold" />
+            </button>      
       <div>
-        <div className="flex items-center px-6 py-4 gap-2">
+        <div className="mt-6 md:mt-0">
+        <div className="flex items-center px-6 md:py-6 gap-2">
           <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">
             G
           </div>
@@ -180,6 +192,7 @@ const Sidebar = () => {
             </li>
           </ul>
         </nav>
+      </div>
       </div>
 
       <div className="p-4">

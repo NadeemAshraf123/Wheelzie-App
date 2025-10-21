@@ -1,9 +1,22 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../app/store';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 
-const Header: React.FC = () => {
+
+
+
+interface HeaderProps {
+  onToggleSidebar : () => void;
+}
+
+
+const Header: React.FC = ( { onToggleSidebar } ) => {
+
 
 
   const activePage = useSelector((state: RootState) => state.ui.activePage);
@@ -12,43 +25,40 @@ const Header: React.FC = () => {
 
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="flex items-center justify-between px-6 py-4">
+    <header className=" bg-amber-200  md:bg-gray-200  p-2 md:p-0 shadow-sm border-b border-gray-200">
+      <div className="flex items-center justify-between md:px-6 md:py-4">
       
+        <button onClick={onToggleSidebar}
+                className='md:hidden px-2 text-xl'>
+           <FontAwesomeIcon icon={faBars} className='text-xl text-gray-700' />
+        </button>
+
+
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-gray-800">{formattedPage}</h2>
-          <p className="text-sm text-gray-500 mt-1">Welcome back, Admin</p>
+          <h2 className="text-[10px] md:text-xl font-semibold text-gray-800">{formattedPage}</h2>
+          {/* <p className="text-[8px] md:text-sm text-gray-500 md:mt-1">Welcome back</p> */}
         </div>
         
       
-        <div className="flex items-center space-x-4">
-          
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-400">🔍</span>
-            </div>
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              className="pl-6 pr-2 py-2 w-32 md:pl-10 pr-4 py-2 w-56 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-          </div>
+        <div className="flex items-center md:space-x-4">
           
         
-          <button className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-            <span className="text-xl">🔔</span>
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          
+        
+          <button className="relative mr-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                  <FontAwesomeIcon icon={faBell} className="text-md md:text-[26px] text-yellow-500" />
+            <span className="absolute -top-1 md:-top-2 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
               3
             </span>
           </button>
           
           
-          <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
+          <div className="flex mr-1 items-center md:space-x-3 border-l border-gray-200 md:pl-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">Admin User</p>
-              <p className="text-xs text-gray-500">Super Admin</p>
+              <p className="text-[10px] font-medium text-gray-900">Admin User</p>
+              <p className="text-[8px] text-gray-500">Super Admin</p>
             </div>
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-5 h-5 md:w-12 md:h-12 ml-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold text-sm">A</span>
             </div>
           </div>

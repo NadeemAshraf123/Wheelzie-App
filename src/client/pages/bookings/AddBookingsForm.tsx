@@ -88,22 +88,29 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
     }
   }, [ratePerDay, formData.plan_days]);
 
+  
+  const isEditable = !editingBooking || formData.status === "Pending";
+  
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
+    if (editingBooking && !isEditable && name !== "status") return;
+
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (name === "car") {
       const selectedCar = cars.find((c) => c.id === Number(value));
       setRatePerDay(selectedCar?.daily_rate || 0);
     }
+
   };
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!formData.booking_date)
-      newErrors.booking_date = "Booking date required";
+    if (!formData.booking_date) newErrors.booking_date = "Booking date required";
     if (!formData.client) newErrors.client = "Client selection required";
     if (!formData.driver) newErrors.driver = "Driver selection required";
     if (!formData.car) newErrors.car = "Car selection required";
@@ -169,11 +176,11 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
         onClick={(e) => e.stopPropagation()}
         className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg"
       >
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold mt-5 md:mb-2">
           {editingBooking ? "Edit Booking" : "Add Booking"}
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+          <div className=" lg:mb-3">
             <label className="block text-sm font-medium">Booking Date</label>
             <input
               type="date"
@@ -181,24 +188,26 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
               value={formData.booking_date}
               onChange={handleChange}
               min={today}
+              disabled={!isEditable && editingBooking ? true : false}
               className={`mt-1 block w-full border rounded px-3 py-2 ${
                 errors.booking_date ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             />
             {errors.booking_date && (
               <p className="text-red-500 text-xs">{errors.booking_date}</p>
             )}
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Client</label>
             <select
               name="client"
               value={formData.client}
               onChange={handleChange}
+              disabled={!isEditable && editingBooking ? true : false}
               className={`mt-1 block w-full border rounded px-3 py-2 ${
                 errors.client ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">Select Client</option>
               {clients.map((c: any) => (
@@ -212,15 +221,16 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             )}
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Driver</label>
             <select
               name="driver"
               value={formData.driver}
               onChange={handleChange}
+              disabled={!isEditable && editingBooking ? true : false}
               className={`mt-1 block w-full border rounded px-3 py-2 ${
                 errors.driver ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">Select Driver</option>
               {drivers.map((d: any) => (
@@ -234,15 +244,16 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             )}
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Car</label>
             <select
               name="car"
               value={formData.car}
               onChange={handleChange}
+              disabled={!isEditable && editingBooking ? true : false}
               className={`mt-1 block w-full border rounded px-3 py-2 ${
                 errors.car ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">Select Car</option>
               {cars.map((c: any) => (
@@ -254,7 +265,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             {errors.car && <p className="text-red-500 text-xs">{errors.car}</p>}
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Rate per day</label>
             <input
               type="number"
@@ -265,7 +276,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
           </div>
 
           {["start_date", "end_date"].map((name) => (
-            <div key={name} className="mb-3">
+            <div key={name} className="lg:mb-3">
               <label className="block text-sm font-medium">
                 {name === "start_date" ? "Start Date" : "End Date"}
               </label>
@@ -274,6 +285,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
                 name={name}
                 value={formData[name as keyof typeof formData]}
                 onChange={handleChange}
+                disabled={!isEditable && editingBooking ? true : false}
                 min={
                   name === "start_date"
                     ? formData.booking_date || today
@@ -281,7 +293,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
                 }
                 className={`mt-1 block w-full border rounded px-3 py-2 ${
                   errors[name] ? "border-red-500" : "border-gray-300"
-                }`}
+                } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
               />
               {errors[name] && (
                 <p className="text-red-500 text-xs">{errors[name]}</p>
@@ -289,7 +301,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             </div>
           ))}
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Plan Days</label>
             <input
               type="number"
@@ -299,7 +311,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             />
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Payment</label>
             <input
               type="number"
@@ -309,12 +321,13 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             />
           </div>
 
-          <div className="mb-3">
+          <div className="lg:mb-3">
             <label className="block text-sm font-medium">Status</label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
+              
               className={`mt-1 block w-full border rounded px-3 py-2 ${
                 errors.status ? "border-red-500" : "border-gray-300"
               }`}

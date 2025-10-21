@@ -109,16 +109,16 @@ const MetricsSection: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid md:grid-cols-2 gap-4">
       {metricCards.map((metric, index) => (
         <div 
           key={index} 
-          className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200"
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-6 hover:shadow-md transition-all duration-200"
         >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">{metric.title}</h3>
-              <p className={`text-2xl font-bold ${metric.color}`}>
+              <h3 className=" text-[14px] md:text-sm font-medium text-gray-700 mb-1">{metric.title}</h3>
+              <p className={`text-md md:text-2xl md:font-bold ${metric.color}`}>
                 {metric.value}
               </p>
             </div>

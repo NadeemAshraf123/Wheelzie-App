@@ -99,7 +99,7 @@ const Reminders: React.FC = () => {
   };
 
   return (
-    <div className="bg-white w-sm shadow rounded-lg p-6">
+    <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Reminders</h3>
         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">

@@ -8,7 +8,7 @@ import Reminders from '../../../components/dashboard/Reminders';
 
 const Dashboard: React.FC = () => {
   return (
-    <div className=" max-w-7xl p-4 space-y-6">
+    <div className=" max-w-7xl space-y-6">
       
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
@@ -45,8 +45,8 @@ const Dashboard: React.FC = () => {
           <BookingsTable />
         </div>
 
-        <div className="xl:col-span-1 space-y-6">
-        </div>
+        {/* <div className="xl:col-span-1 space-y-6">
+        </div> */}
       </div>
     </div>
   );

@@ -87,7 +87,7 @@ const RentStatusDonut: React.FC = () => {
   };
 
   return (
-    <div className="bg-white w-sm min-h-4/12 rounded-2xl shadow-sm p-5">
+    <div className="bg-white min-h-4/12 rounded-2xl shadow-sm p-5">
     
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Rent Status</h3>
@@ -97,7 +97,7 @@ const RentStatusDonut: React.FC = () => {
       </div>
 
     
-      <div className="h-52 flex items-center justify-center ">
+      <div className=" h-32 md:h-52 flex items-cente justify-center ">
         <Pie data={chartData} options={options} />
       </div>
 

@@ -86,25 +86,17 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
     onClose();
   };
 
- const formatPhoneNumber = (value: string) => {
-  
-  const numbers = value.replace(/\D/g, '');
-  
-
-  if (numbers.length <= 3) {
-    return numbers;
-  } else if (numbers.length <= 6) {
-    return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-  } else {
+  const formatPhoneNumber = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
     return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6, 11)}`;
-  }
-};
+  };
 
-const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const formatted = formatPhoneNumber(e.target.value);
-  setValue("phone", formatted);
-};
-
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setValue("phone", formatted);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -116,61 +108,76 @@ const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           </button>
         </div>
 
-        <div className="flex flex-col items-center mb-4">
+        <input
+          type="file"
+          id="client-image-upload"
+          accept="image/*"
+          {...register("image", {
+            onChange: handleImagePreview,
+          })}
+          className="hidden"
+        />
+
+        <label htmlFor="client-image-upload" className="cursor-pointer block w-fit mx-auto mb-4">
           <img
             src={previewImage || "/placeholder-user.png"}
-            className="w-20 h-20 rounded-full object-cover border"
+            alt="Click to select image"
+            className="w-20 h-20 object-cover rounded-full border-2 border-gray-400 hover:opacity-80 transition"
           />
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image")}
-            onChange={handleImagePreview}
-            className="mt-2 text-sm"
-          />
-        </div>
+        </label>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name <span className="text-red-500">*</span>
+            </label>
             <input
               {...register("name", { required: "Name is required" })}
               className="w-full border p-2 rounded"
-              placeholder="Name"
+              placeholder="Enter full name"
             />
             {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email <span className="text-red-500">*</span>
+            </label>
             <input
               {...register("email", {
                 required: "Email is required",
-                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email",
+                },
               })}
               className="w-full border p-2 rounded"
-              placeholder="Email"
+              placeholder="Enter email address"
             />
             {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
             <input
               {...register("phone", {
                 required: "Phone is required",
                 pattern: {
                   value: /^\d{3}-\d{3}-\d{5}$/,
-                  message: "phone must be in formar: 111-222-33333(11 digits total"
+                  message: "Phone must be in format: 111-222-33333",
                 },
                 validate: {
                   positive: (value) => {
-                    const numbersOnly = value.replace(/-/g, '');
-                    return!numbersOnly.startsWith('-') || "Phone number cannot be negative"
+                    const numbersOnly = value.replace(/-/g, "");
+                    return !numbersOnly.startsWith("-") || "Phone number cannot be negative";
                   },
-                 exactLength: (value) => {
-                    const numbersOnly = value.replace(/-/g, '');
-                    return numbersOnly.length === 11 || " Phone number must be exactly 11 digits"
-                  }
-                }
-
+                  exactLength: (value) => {
+                    const numbersOnly = value.replace(/-/g, "");
+                    return numbersOnly.length === 11 || "Phone number must be exactly 11 digits";
+                  },
+                },
               })}
               onChange={(e) => {
                 register("phone").onChange(e);
@@ -183,33 +190,42 @@ const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Address <span className="text-red-500">*</span>
+            </label>
             <textarea
               {...register("address", { required: "Address is required" })}
               className="w-full border p-2 rounded"
-              placeholder="Address"
+              placeholder="Enter full address"
             ></textarea>
             {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Document Name <span className="text-red-500">*</span>
+            </label>
             <input
               {...register("document_name", { required: "Document Name is required" })}
               className="w-full border p-2 rounded"
-              placeholder="Document Name"
+              placeholder="Enter document name"
             />
             {errors.document_name && (
               <p className="text-red-500 text-xs">{errors.document_name.message}</p>
             )}
           </div>
 
-          <input
-            type="number"
-            {...register("points")}
-            className="w-full border p-2 rounded"
-            placeholder="Points"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Points</label>
+            <input
+              type="number"
+              {...register("points")}
+              className="w-full border p-2 rounded"
+              placeholder="Enter points"
+            />
+          </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="px-3 py-1 bg-gray-300 rounded">
               Cancel
             </button>

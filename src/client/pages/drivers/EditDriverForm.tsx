@@ -83,7 +83,7 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       <h2 className="text-lg font-semibold">Edit Driver</h2>
 
-      <div>
+      {/* <div>
         {(previewImage || driver.profile_image) && (
           <img
             src={previewImage || driver.profile_image}
@@ -93,7 +93,7 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
         )}
 
         <label className="block text-sm font-medium">
-          Profile Image <span className="text-red-500">*</span>
+          Profile Image <span className="text-blue-500">*</span>
         </label>
         <input
           type="file"
@@ -107,11 +107,39 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
         {errors.profileImage && (
           <p className="text-red-500 text-sm">{errors.profileImage.message}</p>
         )}
-      </div>
+      </div> */}
+
+      <input
+  type="file"
+  id="driver-image-upload"
+  accept="image/*"
+  {...register("profileImage", {
+    onChange: handleImageChange,
+  })}
+  className="hidden"
+/>
+
+<label
+  htmlFor="driver-image-upload"
+  className="cursor-pointer block w-fit mx-auto"
+>
+  <img
+    src={previewImage || "/placeholder-driver.png"}
+    alt="Click to select image"
+    className="w-24 h-24 object-cover rounded-full border-2 border-gray-400 hover:opacity-80 transition"
+  />
+</label>
+
+{errors.profileImage && (
+  <p className="text-red-500 text-sm text-center mt-1">
+    {errors.profileImage.message}
+  </p>
+)}
+
 
       <div>
         <label className="block text-sm font-medium">
-          Name <span className="text-red-500">*</span>
+          Name <span className="text-blue-500">*</span>
         </label>
         <input
           type="text"
@@ -126,7 +154,7 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
 
       <div>
         <label className="block text-sm font-medium">
-          Email <span className="text-red-500">*</span>
+          Email <span className="text-blue-500">*</span>
         </label>
         <input
           type="email"
@@ -141,7 +169,7 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
 
       <div>
         <label className="block text-sm font-medium">
-          Phone Number <span className="text-red-500">*</span>
+          Phone Number <span className="text-blue-500">*</span>
         </label>
         <input
           type="text"

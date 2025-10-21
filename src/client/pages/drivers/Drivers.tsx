@@ -13,21 +13,29 @@ import {
 import AddDriverForm from "./AddDriverForm";
 import EditDriverForm from "./EditDriverForm";
 
+type Driver = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  address: string;
+  profile_image?: string;
+  profileImage?: string;
+  file?: File;
+};
+
 const Drivers: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const drivers = useSelector(selectDrivers);
   const status = useSelector(selectDriversStatus);
   const error = useSelector((state: RootState) => state.drivers.error);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [selectedDriver, setSelectedDriver] = useState<any | null>(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [selectedDriverForEdit, setSelectedDriverForEdit] = useState<
-    any | null
-  >(null);
+  const [selectedDriverForEdit, setSelectedDriverForEdit] = useState<Driver | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     if (status === "idle") {
@@ -35,48 +43,41 @@ const Drivers: React.FC = () => {
     }
   }, [dispatch, status]);
 
-  const handleAddDriver = async (data: any) => {
-    try {
-      await dispatch(
-        addDriver({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          status: data.status,
-          profile_image: "https://via.placeholder.com/100",
-          address: data.address || "N/A",
-        })
-      ).unwrap();
-      toast.success("Driver added successfully");
-      setShowAddForm(false);
-    } catch (err: any) {
-      toast.error("Failed to add driver");
-      console.error(err);
-    }
+  const handleAddDriver = (data: Driver) => {
+    dispatch(
+      addDriver({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        status: data.status,
+        profile_image: "https://via.placeholder.com/100",
+        address: data.address || "N/A",
+      })
+    )
+      .unwrap()
+      .then(() => {
+        toast.success("Driver added successfully");
+        setShowAddForm(false);
+      })
+      .catch(() => toast.error("Failed to add driver"));
   };
 
-  const handleUpdateDriver = async (payload: {
-    id: number;
-    data: FormData;
-  }) => {
-    try {
-      await dispatch(updateDriver(payload)).unwrap();
-      toast.success("Driver updated successfully");
-      setShowEditForm(false);
-    } catch (err: any) {
-      toast.error("Failed to update driver");
-      console.error(err);
-    }
+  const handleUpdateDriver = (payload: { id: number; data: FormData }) => {
+    dispatch(updateDriver(payload))
+      .unwrap()
+      .then(() => {
+        toast.success("Driver updated successfully");
+        setShowEditForm(false);
+      })
+      .catch(() => toast.error("Failed to update driver"));
   };
 
-  const handleDeleteDriver = async (id: number) => {
-    try {
-      await dispatch(deleteDriver(id)).unwrap();
-      toast.success("Driver deleted successfully");
-      setSelectedDriver(null);
-    } catch (err: any) {
-      toast.error("Failed to delete driver");
-      console.error(err);
+  const handleDeleteDriver = (id: number, name: string) => {
+    if (confirm(`Are you sure you want to delete ${name}?`)) {
+      dispatch(deleteDriver(id))
+        .unwrap()
+        .then(() => toast.success("Driver deleted successfully"))
+        .catch(() => toast.error("Failed to delete driver"));
     }
   };
 
@@ -86,21 +87,36 @@ const Drivers: React.FC = () => {
       (statusFilter ? driver.status === statusFilter : true)
   );
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "On Duty":
+        return "bg-green-500";
+      case "Off Duty":
+        return "bg-yellow-500";
+      case "Sick Leave":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden relative">
-      <div className="w-2/3 p-6 overflow-y-auto border-r border-gray-300">
-        <div className="flex items-center gap-4 mb-6">
+    <div className="w-full">
+      
+      <div className="mb-6">
+        <div className="flex items-center gap-4">
           <input
             type="text"
             placeholder="Search for driver"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border rounded w-1/2"
+            className="px-4 py-2 border border-gray-300 rounded-lg w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Status</option>
             <option value="On Duty">On Duty</option>
@@ -110,182 +126,110 @@ const Drivers: React.FC = () => {
 
           <button
             onClick={() => setShowAddForm(true)}
-            className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            className="ml-auto bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
             Add Driver
           </button>
         </div>
+      </div>
 
-        {status === "loading" && (
-          <div className="p-4 text-center">Loading drivers...</div>
-        )}
-        {status === "failed" && (
-          <div className="p-4 text-center text-red-600">
-            Error: {String(error)}
-          </div>
-        )}
-
-        <table className="w-full table-auto border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-2">Name</th>
-              <th className="p-2">Email</th>
-              <th className="p-2">Phone</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {status !== "loading" &&
-              filteredDrivers.map((driver) => (
-                <tr
-                  key={driver.id}
-                  className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    setSelectedDriver(driver);
-                    toast.success(`Viewing ${driver.name}`);
-                  }}
-                >
-                  <td className="p-2 flex items-center gap-2">
+      {status === "loading" ? (
+        <div className="text-center py-10 text-gray-500">Loading...</div>
+      ) : status === "failed" ? (
+        <div className="text-center py-10 text-red-600">Error: {String(error)}</div>
+      ) : filteredDrivers.length === 0 ? (
+        <div className="text-center py-10 text-gray-500">No drivers found</div>
+      ) : (
+        <div className="bg-white rounded-lg shadow overflow-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Profile
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Status
+                </th>
+             
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredDrivers.map((driver) => (
+                <tr key={driver.id} className="hover:bg-gray-50 transition-colors">
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <img
-                      src={
-                        driver.profile_image ||
-                        driver.profileImage ||
-                        "https://via.placeholder.com/40"
-                      }
+                      src={driver.profile_image || driver.profileImage || "https://via.placeholder.com/80"}
                       alt={driver.name}
-                      className="w-8 h-8 rounded-full"
+                      className="w-12 h-12 rounded-full object-cover"
+                      onError={(e) =>
+                        (e.currentTarget.src = "https://via.placeholder.com/80")
+                      }
                     />
-                    {driver.name}
                   </td>
-                  <td className="p-2">{driver.email}</td>
-                  <td className="p-2">{driver.phone}</td>
-                  <td className="p-2">
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-medium text-gray-900">{driver.name || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-gray-600">{driver.email || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-gray-600">{driver.phone || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 rounded text-white text-sm ${
-                        driver.status === "On Duty"
-                          ? "bg-green-500"
-                          : driver.status === "Off Duty"
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
-                      }`}
+                      className={`px-2 py-1 rounded text-white text-sm ${getStatusColor(driver.status)}`}
                     >
-                      {driver.status}
+                      {driver.status || "N/A"}
                     </span>
                   </td>
-                  <td className="p-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedDriverForEdit(driver);
-                          setShowEditForm(true);
-                        }}
-                        className="bg-gray-300 text-gray-800 rounded-md px-2"
-                      >
-                        edit
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toast(
-                            (t) => (
-                              <div className="flex items-center gap-3">
-                                <span>
-                                  Delete <b>{driver.name}</b>?
-                                </span>
-                                <button
-                                  className="bg-red-600 text-white px-2 py-1 rounded text-sm"
-                                  onClick={() => {
-                                    handleDeleteDriver(driver.id);
-                                    toast.dismiss(t.id);
-                                  }}
-                                >
-                                  Yes
-                                </button>
-                                <button
-                                  className="bg-gray-300 text-black px-2 py-1 rounded text-sm"
-                                  onClick={() => toast.dismiss(t.id)}
-                                >
-                                  No
-                                </button>
-                              </div>
-                            ),
-                            { duration: 4000, position: "top-center" }
-                          );
-                        }}
-                        className="bg-red-600 text-white rounded-md px-2"
-                      >
-                        del
-                      </button>
-                    </div>
+                  
+                 
+                  
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <button
+                      onClick={() => {
+                        setSelectedDriverForEdit(driver);
+                        setShowEditForm(true);
+                      }}
+                      className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteDriver(driver.id, driver.name)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
+            </tbody>
 
-            {status !== "loading" && filteredDrivers.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-4 text-center">
-                  No drivers found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
 
-      {selectedDriver && (
-        <div className="w-1/3 p-6 bg-gray-50 overflow-y-auto border-l border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <img
-                src={
-                  selectedDriver.profile_image ||
-                  "https://via.placeholder.com/100"
-                }
-                alt={selectedDriver.name}
-                className="w-16 h-16 rounded-full"
-              />
-              <div>
-                <h2 className="text-xl font-semibold">{selectedDriver.name}</h2>
-                <p className="text-sm text-gray-600">{selectedDriver.status}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-3 mt-4">
-            <p>
-              <strong>Email:</strong> {selectedDriver.email}
-            </p>
-            <p>
-              <strong>Phone:</strong> {selectedDriver.phone}
-            </p>
-            <p>
-              <strong>Address:</strong> {selectedDriver.address || "N/A"}
-            </p>
-          </div>
-
-          <div className="flex gap-2 mt-6">
-            <button className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 w-full">
-              Message
-            </button>
-            <button
-              className="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 w-full"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedDriverForEdit(selectedDriver);
-                setShowEditForm(true);
-              }}
-            >
-              Edit
-            </button>
-          </div>
+          </table>
         </div>
       )}
 
       {showAddForm && (
-        <div className="absolute inset-0 bg-black/40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
             <button
               onClick={() => setShowAddForm(false)}
@@ -302,11 +246,11 @@ const Drivers: React.FC = () => {
       )}
 
       {showEditForm && selectedDriverForEdit && (
-        <div className="absolute inset-0 bg-black/40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
             <button
               onClick={() => setShowEditForm(false)}
-              className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute top-2 right-3 text-gray-400 hover:text-gray-900 cursor-pointer text-xl"
             >
               ✖
             </button>

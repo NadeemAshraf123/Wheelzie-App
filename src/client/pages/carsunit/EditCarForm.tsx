@@ -16,8 +16,9 @@ interface Props {
 }
 
 const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
-  
-  const [previewImage, setPreviewImage] = useState<string | null>(car.image || null);
+  const [previewImage, setPreviewImage] = useState<string | null>(
+    car.image || null
+  );
 
   const [formData, setFormData] = useState({
     name: car.name,
@@ -41,7 +42,7 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
-      setPreviewImage(URL.createObjectURL(selectedFile)); 
+      setPreviewImage(URL.createObjectURL(selectedFile));
     }
   };
 
@@ -53,18 +54,17 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
     };
   }, [previewImage]);
 
-  
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.license_plate.trim()) newErrors.license_plate = "License plate is required";
+    if (!formData.license_plate.trim())
+      newErrors.license_plate = "License plate is required";
     if (formData.daily_rate === null || formData.daily_rate < 0)
       newErrors.daily_rate = "Daily rate must be 0 or more";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -73,65 +73,95 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      
-      {previewImage && (
+      <h2 className="font-bold text-2xl">Edit Car</h2>
+      <input
+        type="file"
+        id="car-image-upload"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+
+      <label
+        htmlFor="car-image-upload"
+        className="cursor-pointer block w-fit mx-auto"
+      >
         <img
-          src={previewImage}
-          alt="Preview"
-          className="w-32 h-32 object-cover rounded-full border mx-auto mb-3"
+          src={previewImage || "/placeholder-car.png"}
+          alt="Click to select image"
+          className="w-20 h-20 object-cover rounded-full border-2 border-gray-400 hover:opacity-80 transition"
         />
-      )}
+      </label>
 
       <div>
-        <label className="block font-medium mb-1">Upload Image</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-      </div>
-
-      <div>
-        <label className="block font-medium mb-1">Car Name</label>
+        <label className="block font-medium mb-1">Car Name
+          <span className="text-blue-500">*</span>
+        </label>
         <input
           type="text"
           name="name"
+          placeholder="car_Name"
           value={formData.name}
           onChange={handleChange}
-          className={`w-full border px-3 py-2 rounded ${errors.name ? "border-red-500" : ""}`}
+          className={`w-full border border-gray-300 outline-none px-3 py-2 rounded-lg ${
+            errors.name ? "border-red-500" : ""
+          }`}
         />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+        )}
       </div>
 
       <div>
-        <label className="block font-medium mb-1">Model</label>
+        <label className="block font-medium mb-1">Model
+          <span className="text-blue-500">*</span>
+        </label>
         <input
           type="text"
           name="model_type"
+          placeholder="model"
           value={formData.model_type}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border border-gray-300 outline-none px-3 py-2 rounded-lg"
         />
       </div>
 
       <div>
-        <label className="block font-medium mb-1">License Plate</label>
+        <label className="block font-medium mb-1">License Plate
+          <span className="text-blue-500">*</span>
+        </label>
         <input
           type="text"
           name="license_plate"
+          placeholder="ABC-123"
           value={formData.license_plate}
           onChange={handleChange}
-          className={`w-full border px-3 py-2 rounded ${errors.license_plate ? "border-red-500" : ""}`}
+          className={`w-full border border-gray-300 outline-none rounded-lg px-3 py-2 ${
+            errors.license_plate ? "border-red-500" : ""
+          }`}
         />
-        {errors.license_plate && <p className="text-red-500 text-sm mt-1">{errors.license_plate}</p>}
+        {errors.license_plate && (
+          <p className="text-red-500 text-sm mt-1">{errors.license_plate}</p>
+        )}
       </div>
 
       <div>
-        <label className="block font-medium mb-1">Daily Rate</label>
+        <label className="block font-medium mb-1">Daily Rate
+          <span className="text-blue-500">*</span>
+        </label>
         <input
           type="number"
           name="daily_rate"
+          placeholder="100"
           value={formData.daily_rate}
           onChange={handleChange}
-          className={`w-full border px-3 py-2 rounded ${errors.daily_rate ? "border-red-500" : ""}`}
+          className={`w-full border px-3 py-2 border-gray-300 outline-none rounded-lg ${
+            errors.daily_rate ? "border-red-500" : ""
+          }`}
         />
-        {errors.daily_rate && <p className="text-red-500 text-sm mt-1">{errors.daily_rate}</p>}
+        {errors.daily_rate && (
+          <p className="text-red-500 text-sm mt-1">{errors.daily_rate}</p>
+        )}
       </div>
 
       <div className="flex justify-end gap-2">

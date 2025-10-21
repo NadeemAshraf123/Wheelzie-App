@@ -89,74 +89,116 @@ const Cars: React.FC = () => {
   );
 
   return (
-    <div className="p-6 w-full">
-      <div className="flex items-center gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search for car"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border rounded-xl w-1/3"
-        />
+    <div className="w-full ">
+      
+      <div className="mb-6">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search for car"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="ml-auto bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Add Car
-        </button>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            + Add Car
+          </button>
+        </div>
       </div>
 
       {status === "loading" ? (
-        <div className="text-center py-10">Loading...</div>
+        <div className="text-center py-10 text-gray-500">Loading...</div>
       ) : filteredCars.length === 0 ? (
-        <div className="text-center py-10">No cars found</div>
+        <div className="text-center py-10 text-gray-500">No cars found</div>
       ) : (
-        <div className="space-y-2">
-          {filteredCars.map((car) => (
-            <div
-              key={car.id}
-              className="flex items-center justify-between gap-6 p-4 bg-white rounded-lg shadow hover:bg-gray-50"
-            >
-              <img
-                src={car.image ? car.image : "https://via.placeholder.com/80"}
-                alt={car.name}
-                className="w-26 h-26 rounded"
-                onError={(e) =>
-                  (e.currentTarget.src = "https://via.placeholder.com/80")
-                }
-              />
-
-              <div className="w-40 font-semibold">{car.name || "N/A"}</div>
-              <div className="w-32 text-gray-600">{car.model_type || "N/A"}</div>
-              <div className="w-32 text-gray-600">{car.license_plate || "N/A"}</div>
-              <div className="w-24 text-gray-600">
-                {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
-              </div>
-
-              <button
-                onClick={() => {
-                  setSelectedCarForEdit(car);
-                  setShowEditForm(true);
-                }}
-                className="bg-gray-300 px-2 py-1 text-gray-700 rounded-md"
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDeleteCar(car.id, car.name)}
-                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+        <div className="bg-white rounded-lg shadow overflow-auto">
+          <table className="w-full ">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Image
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Car
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Model
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  License
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Rate / Day
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredCars.map((car) => (
+                <tr key={car.id} className="hover:bg-gray-50 transition-colors">
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <img
+                      src={car.image ? car.image : "https://via.placeholder.com/80"}
+                      alt={car.name}
+                      className="w-12 h-12 rounded object-cover"
+                      onError={(e) =>
+                        (e.currentTarget.src = "https://via.placeholder.com/80")
+                      }
+                    />
+                  </td>
+                  
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-medium text-gray-900">{car.name || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-gray-600">{car.model_type || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-gray-600">{car.license_plate || "N/A"}</div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-gray-600 font-medium">
+                      {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
+                    </div>
+                  </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <button
+                      onClick={() => {
+                        setSelectedCarForEdit(car);
+                        setShowEditForm(true);
+                      }}
+                      className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCar(car.id, car.name)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {showAddForm && (
-        <div className="absolute inset-0 bg-black/40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
             <button
               onClick={() => setShowAddForm(false)}
@@ -173,11 +215,11 @@ const Cars: React.FC = () => {
       )}
 
       {showEditForm && selectedCarForEdit && (
-        <div className="absolute inset-0 bg-black/40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
             <button
               onClick={() => setShowEditForm(false)}
-              className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute top-2 right-3 text-gray-400 hover:text-gray-900 cursor-pointer text-xl"
             >
               ✖
             </button>
