@@ -84,7 +84,7 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
 
       <label
         htmlFor="car-image-upload"
-        className="cursor-pointer block w-fit mx-auto"
+        className="cursor-pointer block w-fit "
       >
         <img
           src={previewImage || "/placeholder-car.png"}

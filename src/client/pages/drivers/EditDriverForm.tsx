@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,8 +14,9 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
   onClose,
   onSubmit,
 }) => {
-
-  const [previewImage, setPreviewImage] = useState<string | null>(driver.profile_image || null);
+  const [previewImage, setPreviewImage] = useState<string | null>(
+    driver.profile_image || null
+  );
   const [hasImage, setHasImage] = useState<boolean>(!!driver.profile_image);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,12 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
   const driverSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email format"),
-    phone: z.string().regex(/^\d{3}-\d{3}-\d{5}$/, "Phone must be in format: 111-222-33333 (11 digits total)"),
+    phone: z
+      .string()
+      .regex(
+        /^\d{3}-\d{3}-\d{5}$/,
+        "Phone must be in format: 111-222-33333 (11 digits total)"
+      ),
     status: z.enum(["On Duty", "Half-Day Leave", "Sick Leave", "Off Duty"]),
     profileImage: z
       .any()
@@ -43,7 +49,11 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
         "Image must be 2MB or smaller"
       )
       .refine(
-        (files) => !files?.length || ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(files[0]?.type),
+        (files) =>
+          !files?.length ||
+          ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
+            files[0]?.type
+          ),
         "Only JPEG, PNG, and GIF images are allowed"
       ),
   });
@@ -83,59 +93,32 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       <h2 className="text-lg font-semibold">Edit Driver</h2>
 
-      {/* <div>
-        {(previewImage || driver.profile_image) && (
-          <img
-            src={previewImage || driver.profile_image}
-            className="w-24 h-24 rounded-full object-cover mb-3 mx-auto mt-2 border"
-            alt="Driver profile"
-          />
-        )}
-
-        <label className="block text-sm font-medium">
-          Profile Image <span className="text-blue-500">*</span>
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          {...register("profileImage", {
-            onChange: handleImageChange,
-          })}
-          className="w-full text-sm"
-        />
-
-        {errors.profileImage && (
-          <p className="text-red-500 text-sm">{errors.profileImage.message}</p>
-        )}
-      </div> */}
-
       <input
-  type="file"
-  id="driver-image-upload"
-  accept="image/*"
-  {...register("profileImage", {
-    onChange: handleImageChange,
-  })}
-  className="hidden"
-/>
+        type="file"
+        id="driver-image-upload"
+        accept="image/*"
+        {...register("profileImage", {
+          onChange: handleImageChange,
+        })}
+        className="hidden"
+      />
 
-<label
-  htmlFor="driver-image-upload"
-  className="cursor-pointer block w-fit mx-auto"
->
-  <img
-    src={previewImage || "/placeholder-driver.png"}
-    alt="Click to select image"
-    className="w-24 h-24 object-cover rounded-full border-2 border-gray-400 hover:opacity-80 transition"
-  />
-</label>
+      <label
+        htmlFor="driver-image-upload"
+        className="cursor-pointer block w-fit"
+      >
+        <img
+          src={previewImage || "/placeholder-driver.png"}
+          alt="Click to select image"
+          className="w-24 h-24 object-cover rounded-full border-2 border-gray-400 hover:opacity-80 transition"
+        />
+      </label>
 
-{errors.profileImage && (
-  <p className="text-red-500 text-sm text-center mt-1">
-    {errors.profileImage.message}
-  </p>
-)}
-
+      {errors.profileImage && (
+        <p className="text-red-500 text-sm text-center mt-1">
+          {errors.profileImage.message}
+        </p>
+      )}
 
       <div>
         <label className="block text-sm font-medium">

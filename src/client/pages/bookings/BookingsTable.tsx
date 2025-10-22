@@ -29,10 +29,19 @@ const BookingsTable: React.FC = () => {
   const { data, status, error } = useSelector(
     (state: RootState) => state.bookings
   );
-
   const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
+
+  const [statusOptions] = useState([
+    "Pending",
+    "Ongoing",
+    "Returned",
+    "Cancelled",
+    "Completed",
+  ]);
 
   useEffect(() => {
     if (status === "idle") {
@@ -54,6 +63,32 @@ const BookingsTable: React.FC = () => {
   const handleEdit = (booking: Booking) => {
     setSelectedBooking(booking);
     setShowModal(true);
+  };
+
+  const handleStatusChange = (id: number, newStatus: string) => {
+    const booking = data.find((b) => b.id === id);
+    if (!booking) return;
+
+    const bookingData = {
+      booking_id: booking.booking_id,
+      client_id: booking.client.id,
+      car_id: booking.car.id,
+      start_date: booking.start_date,
+      end_date: booking.end_date,
+      payment: booking.payment,
+      status: newStatus,
+    };
+
+    dispatch(updateBooking({ id, bookingData }))
+      .unwrap()
+      .then(() => {
+        toast.success("Status updated");
+        setEditingStatusId(null);
+      })
+      .catch(() => {
+        toast.error("Failed to update status");
+        setEditingStatusId(null);
+      });
   };
 
   const handleDeleteConfirm = (id: number) => {
@@ -97,19 +132,16 @@ const BookingsTable: React.FC = () => {
     setShowModal(true);
   };
 
-
   const filteredBookings = useMemo(() => {
     if (!data || data.length === 0) return [];
 
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return data;
-
-  
-    return data.filter((booking: Booking) =>
-      booking.booking_id.toLowerCase().includes(term)
+    return data.filter(
+      (booking: Booking) =>
+        booking.booking_id.toLowerCase().includes(term) &&
+        (statusFilter ? booking.status === statusFilter : true)
     );
-  }, [data, searchTerm]);
-
+  }, [data, searchTerm, statusFilter]);
 
   if (status === "loading")
     return (
@@ -131,13 +163,28 @@ const BookingsTable: React.FC = () => {
 
   return (
     <div className=" bg-gray-100 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4 p-2">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 p-2">
         <input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           type="search"
           placeholder="Search by booking id..."
-          className="px-4 py-2 border border-gray-300 rounded-lg w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"        />
+          className="px-4 py-2 border border-gray-300 rounded-lg w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Returned">Returned</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Completed">Completed</option>
+        </select>
+
         <button
           onClick={handleAddNew}
           className="px-3 py-1 bg-blue-500 cursor-pointer rounded-lg text-white hover:bg-blue-700"
@@ -207,9 +254,14 @@ const BookingsTable: React.FC = () => {
                   {new Date(booking.end_date).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 font-semibold">${booking.payment}</td>
+
                 <td className="px-6 py-4">
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                  <select
+                    value={booking.status}
+                    onChange={(e) =>
+                      handleStatusChange(booking.id, e.target.value)
+                    }
+                    className={`px-2 py-1 text-xs rounded border border-gray-300 focus:outline-none ${
                       booking.status.toLowerCase() === "ongoing"
                         ? "bg-blue-100 text-blue-800"
                         : booking.status.toLowerCase() === "returned"
@@ -223,9 +275,14 @@ const BookingsTable: React.FC = () => {
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    {booking.status}
-                  </span>
+                    <option value="Pending">Pending</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Completed">Completed</option>
+                  </select>
                 </td>
+
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
                     <button
@@ -246,7 +303,10 @@ const BookingsTable: React.FC = () => {
             ))}
             {filteredBookings.length === 0 && (
               <tr>
-                <td colSpan={11} className="px-6 py-8 text-center text-gray-500">
+                <td
+                  colSpan={11}
+                  className="px-6 py-8 text-center text-gray-500"
+                >
                   No bookings found.
                 </td>
               </tr>

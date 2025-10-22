@@ -119,7 +119,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           />
 
           <label htmlFor="client-image-upload" className="block cursor-pointer">
-            <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden hover:border-blue-500 transition">
+            <div className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center overflow-hidden hover:border-blue-500 transition">
               {preview ? (
                 <img
                   src={preview}
@@ -127,7 +127,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <span className="text-gray-500">
+                <span className="text-gray-500 text-center text-sm">
                   Click to upload client image
                 </span>
               )}

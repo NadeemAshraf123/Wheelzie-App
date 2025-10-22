@@ -81,7 +81,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+      <h2 className="text-2xl font-semibold text-gray-800 text-left mb-4">
         Add New Car
       </h2>
 
@@ -108,15 +108,15 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
         />
 
         <label htmlFor="car-image-upload" className="block cursor-pointer">
-          <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden hover:border-blue-500 transition">
+          <div className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center overflow-hidden hover:border-blue-500 transition">
             {preview ? (
               <img
                 src={preview}
                 alt="Selected car"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full rounded-full"
               />
             ) : (
-              <span className="text-gray-500">Click to upload car image</span>
+              <span className="text-gray-500 text-center">Click to upload car image</span>
             )}
           </div>
         </label>

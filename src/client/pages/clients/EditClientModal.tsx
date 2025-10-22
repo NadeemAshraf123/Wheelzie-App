@@ -118,7 +118,7 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
           className="hidden"
         />
 
-        <label htmlFor="client-image-upload" className="cursor-pointer block w-fit mx-auto mb-4">
+        <label htmlFor="client-image-upload" className="cursor-pointer block w-fit mb-4">
           <img
             src={previewImage || "/placeholder-user.png"}
             alt="Click to select image"
