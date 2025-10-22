@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import './index.css';
+import './styles/Custom.css'
 import App from './App.tsx';
 import { store } from './app/store.ts';
 

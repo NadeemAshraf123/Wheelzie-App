@@ -1,0 +1,33 @@
+.sidebar-mobile {
+    position: fixed;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-mobile.open {
+    transform: translateX(0);
+}
+
+.overlay-mobile {
+    display: block;
+}
+.hamburger-button, .close-sidebar-button {
+    display: block;
+}
+
+
+@media (min-width: 769px) {
+    /* DESKTOP: Sidebar hamesha visible */
+    .sidebar-mobile {
+        position: static;
+        transform: translateX(0) !important; /* Force visible */
+    }
+    
+    /* DESKTOP: Overlay hide */
+    .overlay-mobile {
+        display: none;
+    }
+    .hamburger-button, .close-sidebar-button {
+    display: none !important;
+}
+}

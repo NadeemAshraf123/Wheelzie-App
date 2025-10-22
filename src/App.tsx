@@ -11,6 +11,8 @@ import Drivers from "./client/pages/drivers/Drivers";
 import Cars from "./client/pages/carsunit/Cars";
 import BookingsTable from "./client/pages/bookings/BookingsTable";
 import NewBookings from "./client/pages/bookings/NewBookings";
+import './index.css';
+import './styles/Custom.css'
 
 function App() {
 
@@ -36,7 +38,7 @@ function App() {
         {isSidebarOpen && (
           <div 
              onClick={closeSidebar}
-             className="fixed inset-0 bg-black/40 z-40 gt-md:hidden">
+             className="fixed inset-0 bg-black/40 z-40 overlay-mobile">
 
           </div>
         )}

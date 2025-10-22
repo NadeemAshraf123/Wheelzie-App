@@ -163,7 +163,7 @@ const BookingsTable: React.FC = () => {
 
   return (
     <div className=" bg-gray-100 rounded-lg shadow-md">
-      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 p-2">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4">
         <input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

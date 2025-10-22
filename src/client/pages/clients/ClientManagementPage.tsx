@@ -149,7 +149,7 @@ const handleDelete = (id: number, name: string) => {
   return (
     <>
       <div className="bg-gray-100 rounded-lg shadow-md">
-        <div className="flex justify-between items-center mb-4 p-2">
+        <div className="flex justify-between items-center mb-4">
           <input
             type="search"
             placeholder="Search for client..."

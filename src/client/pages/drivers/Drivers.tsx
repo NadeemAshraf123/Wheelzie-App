@@ -152,7 +152,7 @@ const handleStatusChange = async (id: number, newStatus: string) => {
 
   return (
     <div className="bg-gray-100 rounded-lg shadow-md">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4 p-2 gap-2">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
         <input
           type="text"
           placeholder="Search for driver..."
