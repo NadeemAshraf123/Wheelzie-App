@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { X } from "lucide-react";
+import './Sidebar.css';
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePage } from "../../features/uiSlice";
 import type { AppDispatch, RootState } from "../../app/store";
@@ -37,12 +38,11 @@ const Sidebar = ( { isOpen, onClose  } ) => {
 
   return (
     <aside 
-         className={`fixed md:static z-50 bg-white shadow-sm h-screen w-60 flex flex-col justify-between transition-transform duration-300 
-                      ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
-                 >
+       className={`sidebar ${isOpen ? 'open' : ''} z-50 bg-white shadow-sm h-screen w-60 flex flex-col justify-between`}>
+
             <button 
                 onClick={onClose}
-                className="md:hidden absolute top-3 right-3 p-2"
+                className="gt-md:hidden absolute top-3 right-3 p-2"
               >
                 <X size={22} className="text-red-600 font-extrabold" />
             </button>      

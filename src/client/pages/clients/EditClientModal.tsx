@@ -103,7 +103,7 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Edit Client</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button onClick={onClose} className=" cursor-pointer font-extrabold hover:text-gray-700">
             <X />
           </button>
         </div>
@@ -128,20 +128,20 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium">
+              Full Name <span className="text-blue-500">*</span>
             </label>
             <input
               {...register("name", { required: "Name is required" })}
-              className="w-full border p-2 rounded"
+              className="w-full border text-gray-500 p-2 rounded"
               placeholder="Enter full name"
             />
             {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium">
+              Email <span className="text-blue-500">*</span>
             </label>
             <input
               {...register("email", {
@@ -151,15 +151,15 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
                   message: "Invalid email",
                 },
               })}
-              className="w-full border p-2 rounded"
+              className="w-full text-gray-500 border p-2 rounded"
               placeholder="Enter email address"
             />
             {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone Number <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium">
+              Phone Number <span className="text-blue-500">*</span>
             </label>
             <input
               {...register("phone", {
@@ -183,31 +183,31 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
                 register("phone").onChange(e);
                 handlePhoneChange(e);
               }}
-              className="w-full border p-2 rounded"
+              className="w-full text-gray-500 border p-2 rounded"
               placeholder="111-222-33333"
             />
-            {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+            {errors.phone && <p className="text-blue-500 text-xs">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Address <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium">
+              Address <span className="text-blue-500">*</span>
             </label>
             <textarea
               {...register("address", { required: "Address is required" })}
-              className="w-full border p-2 rounded"
+              className="w-full border text-gray-500 p-2 rounded"
               placeholder="Enter full address"
             ></textarea>
             {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Document Name <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium">
+              Document Name <span className="text-blue-500">*</span>
             </label>
             <input
               {...register("document_name", { required: "Document Name is required" })}
-              className="w-full border p-2 rounded"
+              className="w-full border text-gray-500 p-2 rounded"
               placeholder="Enter document name"
             />
             {errors.document_name && (
@@ -216,23 +216,23 @@ const EditClientModal: React.FC<Props> = ({ client, onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Points</label>
+            <label className="block text-sm font-medium text-black">Points <span className="text-blue-500">*</span></label>
             <input
               type="number"
               {...register("points")}
-              className="w-full border p-2 rounded"
+              className="w-full border p-2 text-gray-500 rounded"
               placeholder="Enter points"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="px-3 py-1 bg-gray-300 rounded">
+          <div className="flex justify-between gap-2 pt-2">
+            <button type="button" onClick={onClose} className="px-3 py-1 bg-gray-300 cursor-pointer rounded">
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-3 py-1 bg-blue-600 text-white rounded"
+              className="px-3 py-1 cursor-pointer bg-blue-600 text-white rounded"
             >
               {isSubmitting ? "Saving..." : "Save"}
             </button>

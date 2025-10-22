@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useAppDispatch } from "../../../app/store"
+import { useAppDispatch } from "../../../app/store";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchCars,
@@ -29,7 +29,9 @@ const Cars: React.FC = () => {
   const status = useSelector(selectCarsStatus);
 
   const [search, setSearch] = useState("");
-  const [selectedCarForEdit, setSelectedCarForEdit] = useState<Car | null>(null);
+  const [selectedCarForEdit, setSelectedCarForEdit] = useState<Car | null>(
+    null
+  );
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -76,12 +78,41 @@ const Cars: React.FC = () => {
   };
 
   const handleDeleteCar = (id: number, name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-      dispatch(deleteCar(id))
-        .unwrap()
-        .then(() => toast.success("Car deleted successfully"))
-        .catch(() => toast.error("Failed to delete car"));
-    }
+    toast(
+      (t) => (
+        <div>
+          <div>
+            Are you sure you want to delete <strong>{name}</strong>?
+          </div>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => {
+                dispatch(deleteCar(id))
+                  .unwrap()
+                  .then(() => {
+                    toast.dismiss(t.id);
+                    toast.success("Car deleted successfully");
+                  })
+                  .catch(() => {
+                    toast.dismiss(t.id);
+                    toast.error("Failed to delete car");
+                  });
+              }}
+              className="px-2 py-1 cursor-pointer bg-green-500 text-white rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-2 py-1 cursor-pointer bg-red-500 text-white rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 10000 }
+    );
   };
 
   const filteredCars = cars.filter((car) =>
@@ -89,260 +120,121 @@ const Cars: React.FC = () => {
   );
 
   return (
-    // <div className="w-full ">
-      
-    //   <div className="mb-6">
-    //     <div className="flex items-center gap-4">
-    //       <input
-    //         type="text"
-    //         placeholder="Search for car"
-    //         value={search}
-    //         onChange={(e) => setSearch(e.target.value)}
-    //         className="px-4 py-2 border border-gray-300 rounded-lg w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //       />
-
-    //       <button
-    //         onClick={() => setShowAddForm(true)}
-    //         className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition-colors"
-    //       >
-    //         + Add Car
-    //       </button>
-    //     </div>
-    //   </div>
-
-    //   {status === "loading" ? (
-    //     <div className="text-center py-10 text-gray-500">Loading...</div>
-    //   ) : filteredCars.length === 0 ? (
-    //     <div className="text-center py-10 text-gray-500">No cars found</div>
-    //   ) : (
-    //     <div className="bg-white rounded-lg shadow overflow-auto">
-    //       <table className="w-full ">
-    //         <thead className="bg-gray-50 border-b border-gray-200">
-    //           <tr>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               Image
-    //             </th>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               Car
-    //             </th>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               Model
-    //             </th>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               License
-    //             </th>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               Rate / Day
-    //             </th>
-    //             <th className="px-6 py-3 text-left text-xs font-lg uppercase tracking-wider">
-    //               Actions
-    //             </th>
-    //           </tr>
-    //         </thead>
-    //         <tbody className="bg-white divide-y divide-gray-200">
-    //           {filteredCars.map((car) => (
-    //             <tr key={car.id} className="hover:bg-gray-50 transition-colors">
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap">
-    //                 <img
-    //                   src={car.image ? car.image : "https://via.placeholder.com/80"}
-    //                   alt={car.name}
-    //                   className="w-12 h-12 rounded object-cover"
-    //                   onError={(e) =>
-    //                     (e.currentTarget.src = "https://via.placeholder.com/80")
-    //                   }
-    //                 />
-    //               </td>
-                  
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap">
-    //                 <div className="font-medium text-gray-900">{car.name || "N/A"}</div>
-    //               </td>
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap">
-    //                 <div className="text-gray-600">{car.model_type || "N/A"}</div>
-    //               </td>
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap">
-    //                 <div className="text-gray-600">{car.license_plate || "N/A"}</div>
-    //               </td>
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap">
-    //                 <div className="text-gray-600 font-medium">
-    //                   {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
-    //                 </div>
-    //               </td>
-                  
-    //               <td className="px-6 py-4 whitespace-nowrap space-x-2">
-    //                 <button
-    //                   onClick={() => {
-    //                     setSelectedCarForEdit(car);
-    //                     setShowEditForm(true);
-    //                   }}
-    //                   className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"
-    //                 >
-    //                   Edit
-    //                 </button>
-    //                 <button
-    //                   onClick={() => handleDeleteCar(car.id, car.name)}
-    //                   className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
-    //                 >
-    //                   Delete
-    //                 </button>
-    //               </td>
-    //             </tr>
-    //           ))}
-    //         </tbody>
-    //       </table>
-    //     </div>
-    //   )}
-
-    //   {showAddForm && (
-    //     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-    //       <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
-    //         <button
-    //           onClick={() => setShowAddForm(false)}
-    //           className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
-    //         >
-    //           ✖
-    //         </button>
-    //         <AddCarForm
-    //           onClose={() => setShowAddForm(false)}
-    //           onSubmit={handleAddCar}
-    //         />
-    //       </div>
-    //     </div>
-    //   )}
-
-    //   {showEditForm && selectedCarForEdit && (
-    //     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-    //       <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] relative">
-    //         <button
-    //           onClick={() => setShowEditForm(false)}
-    //           className="absolute top-2 right-3 text-gray-400 hover:text-gray-900 cursor-pointer text-xl"
-    //         >
-    //           ✖
-    //         </button>
-    //         <EditCarForm
-    //           car={selectedCarForEdit}
-    //           onClose={() => setShowEditForm(false)}
-    //           onSubmit={handleUpdateCar}
-    //         />
-    //       </div>
-    //     </div>
-    //   )}
-    // </div>
-<div className="bg-gray-100 rounded-lg shadow-md">
-  <div className="flex flex-col md:flex-row justify-between items-center mb-4 p-2 gap-2">
-    <input
-      type="text"
-      placeholder="Search for car..."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <button
-      onClick={() => setShowAddForm(true)}
-      className="px-3 py-1 bg-blue-500 cursor-pointer rounded-lg text-white hover:bg-blue-700"
-    >
-      + Add Car
-    </button>
-  </div>
-
-  <div className="overflow-x-auto">
-    <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-      <thead className="bg-gray-50">
-        <tr className="text-left">
-          <th className="px-6 py-3 border-b">Image</th>
-          <th className="px-6 py-3 border-b">Car</th>
-          <th className="px-6 py-3 border-b">Model</th>
-          <th className="px-6 py-3 border-b">License</th>
-          <th className="px-6 py-3 border-b">Rate / Day</th>
-          <th className="px-6 py-3 border-b">Actions</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-200">
-        {filteredCars.map((car) => (
-          <tr key={car.id} className="hover:bg-gray-50 transition">
-            <td className="px-6 py-4">
-              <img
-                src={car.image || "https://via.placeholder.com/80"}
-                alt={car.name}
-                className="w-12 h-12 rounded object-cover"
-                onError={(e) =>
-                  (e.currentTarget.src = "https://via.placeholder.com/80")
-                }
-              />
-            </td>
-            <td className="px-6 py-4 font-medium text-gray-900">{car.name || "N/A"}</td>
-            <td className="px-6 py-4 text-gray-600">{car.model_type || "N/A"}</td>
-            <td className="px-6 py-4 text-gray-600">{car.license_plate || "N/A"}</td>
-            <td className="px-6 py-4 font-medium text-gray-600">
-              {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
-            </td>
-            <td className="px-6 py-4">
-              <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setSelectedCarForEdit(car);
-                    setShowEditForm(true);
-                  }}
-                  className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteCar(car.id, car.name)}
-                  className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-        {filteredCars.length === 0 && (
-          <tr>
-            <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-              No cars found.
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-
-  {(showAddForm || showEditForm) && (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="w-full max-w-lg bg-white rounded-lg p-4 relative">
+    <div className="bg-gray-100 rounded-lg shadow-md">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 p-2 gap-2">
+        <input
+          type="text"
+          placeholder="Search for car..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
-          onClick={() => {
-            setShowAddForm(false);
-            setShowEditForm(false);
-          }}
-          className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+          onClick={() => setShowAddForm(true)}
+          className="px-3 py-1 bg-blue-500 cursor-pointer rounded-lg text-white hover:bg-blue-700"
         >
-          ✖
+          + Add Car
         </button>
-        {showAddForm && (
-          <AddCarForm
-            onClose={() => setShowAddForm(false)}
-            onSubmit={handleAddCar}
-          />
-        )}
-        {showEditForm && selectedCarForEdit && (
-          <EditCarForm
-            car={selectedCarForEdit}
-            onClose={() => setShowEditForm(false)}
-            onSubmit={handleUpdateCar}
-          />
-        )}
       </div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead className="bg-gray-50">
+            <tr className="text-left">
+              <th className="px-6 py-3 border-b">Image</th>
+              <th className="px-6 py-3 border-b">Car</th>
+              <th className="px-6 py-3 border-b">Model</th>
+              <th className="px-6 py-3 border-b">License</th>
+              <th className="px-6 py-3 border-b">Rate / Day</th>
+              <th className="px-6 py-3 border-b">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {filteredCars.map((car) => (
+              <tr key={car.id} className="hover:bg-gray-50 transition">
+                <td className="px-6 py-4">
+                  <img
+                    src={car.image || "https://via.placeholder.com/80"}
+                    alt={car.name}
+                    className="w-12 h-12 rounded object-cover"
+                    onError={(e) =>
+                      (e.currentTarget.src = "https://via.placeholder.com/80")
+                    }
+                  />
+                </td>
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {car.name || "N/A"}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {car.model_type || "N/A"}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {car.license_plate || "N/A"}
+                </td>
+                <td className="px-6 py-4 font-medium text-gray-600">
+                  {car.daily_rate !== null ? `$${car.daily_rate}` : "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setSelectedCarForEdit(car);
+                        setShowEditForm(true);
+                      }}
+                      className="px-2 py-1 cursor-pointer text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCar(car.id, car.name)}
+                      className="px-2 py-1 cursor-pointer text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {filteredCars.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  No cars found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {(showAddForm || showEditForm) && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="w-md max-w-lg bg-white rounded-lg p-4 relative">
+            <button
+              onClick={() => {
+                setShowAddForm(false);
+                setShowEditForm(false);
+              }}
+              className="absolute  cursor-pointer top-2 right-3 text-gray-500 hover:text-gray-800 text-lg"
+            >
+              X
+            </button>
+            {showAddForm && (
+              <AddCarForm
+                onClose={() => setShowAddForm(false)}
+                onSubmit={handleAddCar}
+              />
+            )}
+            {showEditForm && selectedCarForEdit && (
+              <EditCarForm
+                car={selectedCarForEdit}
+                onClose={() => setShowEditForm(false)}
+                onSubmit={handleUpdateCar}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
-  )}
-</div>
-
-
   );
 };
 

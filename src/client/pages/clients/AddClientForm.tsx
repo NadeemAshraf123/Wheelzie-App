@@ -81,13 +81,13 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="min-h-[80vh] p-2">
-      <div className="bg-white rounded-lg shadow-md max-w-3xl mx-auto p-6">
-        <div className="flex items-center justify-between pb-4">
+    <div className="min-h-[80vh]">
+      <div className="bg-white rounded-lg max-w-3xl mx-auto p-6">
+        <div className="flex items-center justify-between pb-2">
           <h2 className="text-xl font-semibold">Add New Client</h2>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <input
             type="file"
             id="client-image-upload"
@@ -141,7 +141,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium ">
               Full Name <span className="text-blue-500">*</span>
             </label>
             <input
@@ -164,7 +164,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Email <span className="text-blue-500">*</span>
             </label>
             <input
@@ -189,7 +189,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium ">
               Phone <span className="text-blue-500">*</span>
             </label>
             <input
@@ -230,7 +230,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Address <span className="text-blue-500">*</span>
             </label>
             <textarea
@@ -255,7 +255,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Document Name <span className="text-blue-500">*</span>
             </label>
             <input
@@ -281,7 +281,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
 
           
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Points<span className="text-blue-500">*</span>
             </label>
             <input
@@ -310,7 +310,7 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onClose }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 cursor-pointer bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <Loader2 className="animate-spin w-4 h-4" />

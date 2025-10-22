@@ -56,8 +56,8 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+    <div className="bg-white rounded-xl w-full max-w-md">
+      <h2 className="text-2xl font-semibold text-gray-800 text-left mb-4">
         Add New Driver
       </h2>
 
@@ -97,7 +97,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
                 className="object-cover w-full h-full"
               />
             ) : (
-              <span className="text-gray-500 text-center">
+              <span className="text-gray-500 text-sm text-center">
                 Click to upload driver image
               </span>
             )}
@@ -220,7 +220,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
               reset();
               onClose();
             }}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700"
+            className="px-4 py-2 cursor-pointer rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700"
           >
             Cancel
           </button>
@@ -228,7 +228,7 @@ const AddDriverForm: React.FC<AddDriverFormProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={status === "loading"}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 flex items-center"
+            className="px-4 py-2 cursor-pointer rounded-lg bg-blue-600 text-white hover:bg-blue-700 flex items-center"
           >
             {status === "loading" ? (
               <>

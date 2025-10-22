@@ -164,17 +164,17 @@ const EditCarForm: React.FC<Props> = ({ car, onClose, onSubmit }) => {
         )}
       </div>
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-between gap-2">
         <button
           type="button"
           onClick={onClose}
-          className="px-3 py-1 rounded bg-gray-300 hover:bg-gray-400"
+          className="px-3 py-1 cursor-pointer rounded bg-gray-300 hover:bg-gray-400"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+          className="px-3 py-1 cursor-pointer rounded bg-blue-500 text-white hover:bg-blue-600"
         >
           Save
         </button>

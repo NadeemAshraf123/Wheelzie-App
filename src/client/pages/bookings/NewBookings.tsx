@@ -100,8 +100,8 @@ const NewBookings: React.FC = () => {
   // );
 
 return (
-  <div className="bg-gray-100 rounded-lg shadow-md p-4">
-    <h2 className="text-lg font-semibold text-gray-700 mb-4 px-2">New Bookings</h2>
+  <div className="bg-gray-100 rounded-xl shadow-md">
+    {/* <h2 className="text-lg font-semibold text-gray-700 mb-4 px-2">New Bookings</h2> */}
 
     {status === "loading" ? (
       <div className="flex justify-center items-center h-32">
@@ -119,7 +119,7 @@ return (
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-50">
-            <tr>
+            <tr className="text-left">
               <th className="px-6 py-3 border-b">Booking ID</th>
               <th className="px-6 py-3 border-b">Booking Date</th>
               <th className="px-6 py-3 border-b">Client</th>

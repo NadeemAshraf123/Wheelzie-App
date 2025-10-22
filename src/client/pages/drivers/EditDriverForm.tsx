@@ -27,7 +27,6 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
     }
   };
 
-  // Create schema inside component to access driver prop
   const driverSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email format"),
@@ -183,17 +182,17 @@ const EditDriverForm: React.FC<EditDriverFormProps> = ({
         )}
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex justify-between gap-2 pt-2">
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+          className="px-4 py-2 cursor-pointer bg-gray-400 text-white rounded hover:bg-gray-500"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 cursor-pointer py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Update
         </button>

@@ -176,7 +176,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
         onClick={(e) => e.stopPropagation()}
         className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg"
       >
-        <h2 className="text-xl font-bold mt-5 md:mb-2">
+        <h2 className="text-xl font-bold md:mb-2">
           {editingBooking ? "Edit Booking" : "Add Booking"}
         </h2>
         <form onSubmit={handleSubmit}>
@@ -189,7 +189,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
               onChange={handleChange}
               min={today}
               disabled={!isEditable && editingBooking ? true : false}
-              className={`mt-1 block w-full border rounded px-3 py-2 ${
+              className={`mt-1 block w-full border rounded px-3 py-1 ${
                 errors.booking_date ? "border-red-500" : "border-gray-300"
               } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             />
@@ -198,14 +198,14 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             )}
           </div>
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Client</label>
             <select
               name="client"
               value={formData.client}
               onChange={handleChange}
               disabled={!isEditable && editingBooking ? true : false}
-              className={`mt-1 block w-full border rounded px-3 py-2 ${
+              className={`mt-1 block w-full border rounded px-3 py-1 ${
                 errors.client ? "border-red-500" : "border-gray-300"
               } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
@@ -228,7 +228,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
               value={formData.driver}
               onChange={handleChange}
               disabled={!isEditable && editingBooking ? true : false}
-              className={`mt-1 block w-full border rounded px-3 py-2 ${
+              className={`mt-1 block w-full border rounded px-3 py-1 ${
                 errors.driver ? "border-red-500" : "border-gray-300"
               } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
@@ -244,14 +244,14 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             )}
           </div>
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Car</label>
             <select
               name="car"
               value={formData.car}
               onChange={handleChange}
               disabled={!isEditable && editingBooking ? true : false}
-              className={`mt-1 block w-full border rounded px-3 py-2 ${
+              className={`mt-1 block w-full border rounded px-3 py-1 ${
                 errors.car ? "border-red-500" : "border-gray-300"
               } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
@@ -265,18 +265,18 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             {errors.car && <p className="text-red-500 text-xs">{errors.car}</p>}
           </div>
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Rate per day</label>
             <input
               type="number"
               value={ratePerDay}
               readOnly
-              className="mt-1 block w-full border rounded px-3 py-2 bg-gray-100"
+              className="mt-1 block w-full border rounded px-3 py-1 bg-gray-100"
             />
           </div>
 
           {["start_date", "end_date"].map((name) => (
-            <div key={name} className="lg:mb-3">
+            <div key={name} className="lg:mb-1">
               <label className="block text-sm font-medium">
                 {name === "start_date" ? "Start Date" : "End Date"}
               </label>
@@ -291,7 +291,7 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
                     ? formData.booking_date || today
                     : formData.start_date
                 }
-                className={`mt-1 block w-full border rounded px-3 py-2 ${
+                className={`mt-1 block w-full border rounded px-3 py-1 ${
                   errors[name] ? "border-red-500" : "border-gray-300"
                 } ${!isEditable && editingBooking ? "bg-gray-100 cursor-not-allowed" : ""}`}
               />
@@ -301,34 +301,34 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             </div>
           ))}
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Plan Days</label>
             <input
               type="number"
               value={formData.plan_days}
               readOnly
-              className="mt-1 block w-full border rounded px-3 py-2 bg-gray-100"
+              className="mt-1 block w-full border rounded px-3 py-1 bg-gray-100"
             />
           </div>
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Payment</label>
             <input
               type="number"
               value={formData.payment}
               readOnly
-              className="mt-1 block w-full border rounded px-3 py-2 bg-gray-100"
+              className="mt-1 block w-full border rounded px-3 py-1 bg-gray-100"
             />
           </div>
 
-          <div className="lg:mb-3">
+          <div className="lg:mb-1">
             <label className="block text-sm font-medium">Status</label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
               
-              className={`mt-1 block w-full border rounded px-3 py-2 ${
+              className={`mt-1 block w-full border rounded px-3 py-1 ${
                 errors.status ? "border-red-500" : "border-gray-300"
               }`}
             >
@@ -343,17 +343,17 @@ const AddBookingForm: React.FC<BookingFormProps> = ({
             )}
           </div>
 
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-between mt-2">
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-gray-300 rounded"
+              className="mr-2 px-4 py-1 cursor-pointer bg-gray-300 rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="px-4 py-1 bg-blue-600 cursor-pointer text-white rounded-lg hover:bg-blue-700"
             >
               {editingBooking ? "Update" : "Submit"}
             </button>

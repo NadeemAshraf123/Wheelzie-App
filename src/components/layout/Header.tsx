@@ -25,11 +25,11 @@ const Header: React.FC = ( { onToggleSidebar } ) => {
 
 
   return (
-    <header className=" bg-amber-200  md:bg-gray-200  p-2 md:p-0 shadow-sm border-b border-gray-200">
+    <header className=" bg-gray-200  md:bg-gray-200  p-2 md:p-0 shadow-lg border-b border-gray-200">
       <div className="flex items-center justify-between md:px-6 md:py-4">
       
         <button onClick={onToggleSidebar}
-                className='md:hidden px-2 text-xl'>
+                className='gt-md:hidden px-2 text-xl'>
            <FontAwesomeIcon icon={faBars} className='text-xl text-gray-700' />
         </button>
 

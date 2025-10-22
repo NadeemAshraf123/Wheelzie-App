@@ -110,20 +110,20 @@ const BookingsTable: React.FC = () => {
                     toast.error("Failed to delete booking");
                   });
               }}
-              className="px-2 py-1 bg-green-400 text-white rounded-r-md"
+              className="px-2 py-1 cursor-pointer bg-green-400 text-white rounded-r-md"
             >
               Yes
             </button>
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="px-2 py-1  bg-red-400 text-white rounded-r-md"
+              className="px-2 py-1  cursor-pointer bg-red-400 text-white rounded-r-md"
             >
               No
             </button>
           </div>
         </div>
       ),
-      { duration: Infinity }
+      { duration: 10000 }
     );
   };
 
@@ -219,7 +219,7 @@ const BookingsTable: React.FC = () => {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-50">
-            <tr>
+            <tr className="text-left">
               <th className="px-6 py-3 border-b">Booking ID</th>
               <th className="px-6 py-3 border-b">Booking Date</th>
               <th className="px-6 py-3 border-b">Client</th>
@@ -287,13 +287,13 @@ const BookingsTable: React.FC = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(booking)}
-                      className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                      className="px-2 py-1 cursor-pointer text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteConfirm(booking.id)}
-                      className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                      className="px-2 py-1 cursor-pointer text-xs bg-red-500 text-white rounded hover:bg-red-600"
                     >
                       Delete
                     </button>

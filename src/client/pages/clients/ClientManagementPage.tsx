@@ -54,11 +54,39 @@ const ClientManagementPage: React.FC = () => {
     );
   };
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("Are you sure you want to delete this client?")) {
-      dispatch(deleteClient(id));
-    }
-  };
+const handleDelete = (id: number, name: string) => {
+  toast((t) => (
+    <div>
+      <div>Are you sure you want to delete <strong>{name}</strong>?</div>
+      <div className="mt-2 flex gap-2">
+        <button
+          onClick={() => {
+            dispatch(deleteClient(id))
+              .unwrap()
+              .then(() => {
+                toast.dismiss(t.id);
+                toast.success("Client deleted successfully");
+              })
+              .catch(() => {
+                toast.dismiss(t.id);
+                toast.error("Failed to delete client");
+              });
+          }}
+          className="px-2 py-1 cursor-pointer bg-green-500 text-white rounded"
+        >
+          Yes
+        </button>
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className="px-2 py-1 cursor-pointer bg-red-500 text-white rounded"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  ), { duration: 10000 });
+};
+
 
   const handleAddClick = () => {
     setIsAddOpen(true);
@@ -140,7 +168,7 @@ const ClientManagementPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-gray-50">
-              <tr>
+              <tr className="text-left">
                 <th className="px-6 py-3 border-b">Select</th>
                 <th className="px-6 py-3 border-b">Client</th>
                 <th className="px-6 py-3 border-b">Phone</th>
@@ -190,13 +218,15 @@ const ClientManagementPage: React.FC = () => {
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {client.phone}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {client.address}
+                  <td className="px-6 py-4 text-sm hover:cursor-pointer text-gray-700 max-w-[180px] truncate" title={client.address}>
+                    <span className="shrink-0"> {client.address}</span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700 flex items-center">
-                    <FileText className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>{client.document_name}</span>
+
+                  <td className="px-6 py-4 text-sm hover:cursor-pointer text-gray-700 flex items-center max-w-[180px] truncate" title={client.document_name}>
+                    <FileText className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                    <span className="truncate">{client.document_name}</span>
                   </td>
+
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     {client.points}
                   </td>
@@ -204,14 +234,14 @@ const ClientManagementPage: React.FC = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEditClick(client)}
-                        className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-2 cursor-pointer py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(client.id)}
                         disabled={deleting}
-                        className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+                        className="px-2 cursor-pointer py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
                       >
                         {deleting ? "Deleting..." : "Delete"}
                       </button>
@@ -237,13 +267,13 @@ const ClientManagementPage: React.FC = () => {
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg bg-white rounded-lg p-4 relative"
+              className="w-full max-w-lg bg-white rounded-lg relative"
             >
               <button
                 onClick={() => setIsAddOpen(false)}
-                className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+                className="absolute cursor-pointer top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
               >
-                ✖
+                X
               </button>
               <AddClientForm
                 onClose={() => setIsAddOpen(false)}

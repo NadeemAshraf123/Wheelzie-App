@@ -74,14 +74,36 @@ const Drivers: React.FC = () => {
       .catch(() => toast.error("Failed to update driver"));
   };
 
-  const handleDeleteDriver = (id: number, name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-      dispatch(deleteDriver(id))
-        .unwrap()
-        .then(() => toast.success("Driver deleted successfully"))
-        .catch(() => toast.error("Failed to delete driver"));
-    }
-  };
+ 
+const handleDeleteDriver = (id: number, name: string) => {
+  toast((t) => (
+    <div>
+      <div>Are you sure you want to delete <strong>{name}</strong>?</div>
+      <div className="mt-2 flex gap-2">
+        <button 
+          onClick={() => {
+            dispatch(deleteDriver(id))
+            .unwrap()
+            .then(() => {
+              toast.dismiss(t.id);
+              toast.success("Driver deleted successfully");
+            });
+          }}
+          className="px-2 py-1 bg-green-500 text-white rounded"
+        >
+          Yes
+        </button>
+        <button 
+          className="px-2 py-1 bg-red-500 text-white rounded"
+          onClick={() => toast.dismiss(t.id)}
+        >
+          No
+        </button>
+      </div>
+    </div>
+  ), { duration: 10000 })
+}
+
 
 const handleStatusChange = async (id: number, newStatus: string) => {
   const driver = drivers.find((d) => d.id === id);
@@ -232,7 +254,7 @@ const handleStatusChange = async (id: number, newStatus: string) => {
                           setSelectedDriverForEdit(driver);
                           setShowEditForm(true);
                         }}
-                        className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-2 py-1 cursor-pointer text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
                       >
                         Edit
                       </button>
@@ -240,7 +262,7 @@ const handleStatusChange = async (id: number, newStatus: string) => {
                         onClick={() =>
                           handleDeleteDriver(driver.id, driver.name)
                         }
-                        className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                        className="px-2 py-1 cursor-pointer text-xs bg-red-500 text-white rounded hover:bg-red-600"
                       >
                         Delete
                       </button>
@@ -265,15 +287,15 @@ const handleStatusChange = async (id: number, newStatus: string) => {
 
       {(showAddForm || showEditForm) && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="w-full max-w-lg bg-white rounded-lg p-4 relative">
+          <div className="w-md max-w-lg bg-white rounded-lg p-6 relative">
             <button
               onClick={() => {
                 setShowAddForm(false);
                 setShowEditForm(false);
               }}
-              className="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute cursor-pointer top-2 right-3 text-gray-500 hover:text-gray-800 text-xl"
             >
-              ✖
+              X
             </button>
             {showAddForm && (
               <AddDriverForm

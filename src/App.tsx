@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import "./utils/ChartConfig";
 import { Toaster } from "react-hot-toast";
 import { Routes, Route } from "react-router-dom";
@@ -23,6 +23,7 @@ function App() {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
+  
 
 
 
@@ -35,7 +36,7 @@ function App() {
         {isSidebarOpen && (
           <div 
              onClick={closeSidebar}
-             className="fixed inset-0 bg-black/40 z-40 md:hidden">
+             className="fixed inset-0 bg-black/40 z-40 gt-md:hidden">
 
           </div>
         )}
@@ -44,7 +45,7 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header onToggleSidebar={toggleSidebar} />
 
-          <main className="flex-1 overflow-auto p-3 md:p-6">
+          <main className="flex-1 overflow-auto p-3 md:p-4">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />

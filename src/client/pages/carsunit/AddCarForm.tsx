@@ -80,8 +80,8 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 text-left mb-4">
+    <div className="bg-white rounded-xl w-full max-w-md p-6">
+      <h2 className="text-2xl font-bold text-gray-800 text-left mb-6">
         Add New Car
       </h2>
 
@@ -195,7 +195,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
               reset();
               onClose();
             }}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700"
+            className="px-4 py-2 cursor-pointer rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700"
           >
             Cancel
           </button>
@@ -203,7 +203,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={mutation.isLoading}
-            className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700 flex items-center"
+            className="px-4 py-2 cursor-pointer rounded-lg bg-blue-500 text-white hover:bg-blue-700 flex items-center"
           >
             {mutation.isLoading ? (
               <>

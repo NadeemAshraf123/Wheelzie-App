@@ -147,7 +147,7 @@ export const Calendar: React.FC = () => {
   if (!calendarData) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
